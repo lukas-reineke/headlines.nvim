@@ -1,0 +1,186 @@
+*headlines.txt*        Show background highlight for headlines and codeblocks
+
+
+Author: Lukas Reineke <lukas.reineke@protonmail.com>
+Version: 1.0.0
+
+==============================================================================
+CONTENTS                                                           *headlines*
+
+  1. Introduction                               |headlines-introduction|
+  2. Highlights                                 |headlines-highlights|
+  3. Setup                                      |headlines-setup|
+  4. Changelog                                  |headlines-changelog|
+  5. License                                    |headlines-license|
+
+==============================================================================
+ 1. INTRODUCTION                                      *headlines-introduction*
+
+This plugin adds 3 kind of horizontal highlights for text filetypes, like
+`markdown`, `vimwiki` and `orgmode`.
+
+1. Background highlighting for headlines
+2. Background highlighting for code blocks
+3. Whole window separator for horizontal line
+
+==============================================================================
+ 2. HIGHLIGHTS                                          *headlines-highlights*
+
+There are 3 highlight groups that get created by default.
+You can overwrite them or create more yourself.
+
+------------------------------------------------------------------------------
+Headline                                                         *hl-Headline*
+
+    This highlight group is used for all headlines by default.
+
+    Default: links to |hl-ColorColumn|
+
+    Example: >
+
+        highlight link Headline ColorColumn
+
+------------------------------------------------------------------------------
+CodeBlock                                                       *hl-CodeBlock*
+
+    This highlight group is used for codeblocks.
+
+    Default: links to |hl-ColorColumn|
+
+    Example: >
+
+        highlight link CodeBlock ColorColumn
+
+------------------------------------------------------------------------------
+Dash                                                                 *hl-Dash*
+
+    This highlight group is used for horizontal dashes.
+
+    Default: links to |hl-LineNr|
+
+    Example: >
+
+        highlight link CodeBlock LineNr
+
+==============================================================================
+ 3. SETUP                                                    *headlines-setup*
+
+To configure headlines.nvim pass a config table into the setup function.
+
+Default config: >
+
+  require("headlines").setup {
+      markdown = {
+          source_pattern_start = "^```",
+          source_pattern_end = "^```$",
+          dash_pattern = "^---+$",
+          headline_pattern = "^#+",
+          headline_signs = { "Headline" },
+          codeblock_sign = "CodeBlock",
+          dash_highlight = "Dash",
+      },
+      vimwiki = {
+          source_pattern_start = "^{{{%a+",
+          source_pattern_end = "^}}}$",
+          dash_pattern = "^---+$",
+          headline_pattern = "^=+",
+          headline_signs = { "Headline" },
+          codeblock_sign = "CodeBlock",
+          dash_highlight = "Dash",
+      },
+      org = {
+          source_pattern_start = "#%+[bB][eE][gG][iI][nN]_[sS][rR][cC]",
+          source_pattern_end = "#%+[eE][nN][dD]_[sS][rR][cC]",
+          dash_pattern = "^-----+$",
+          headline_pattern = "^%*+",
+          headline_signs = { "Headline" },
+          codeblock_sign = "CodeBlock",
+          dash_highlight = "Dash",
+      },
+  }
+
+The table root is the |filetype|
+Each filetype has following options.
+To disable any of the options, set it to `nil`.
+
+A lot of the options are lua patterns.
+To learn more about how lua pattern work, see here:
+https://www.lua.org/manual/5.1/manual.html#5.4.1
+
+------------------------------------------------------------------------------
+source_pattern_start                          *headlines-source_pattern_start*
+
+    Specifies the lua patterns to match the start of a code block.
+
+------------------------------------------------------------------------------
+source_pattern_end                              *headlines-source_pattern_end*
+
+    Specifies the lua patterns to match the end of a code block.
+
+------------------------------------------------------------------------------
+dash_pattern                                          *headlines-dash_pattern*
+
+    Specifies the lua patterns to match a horizontal dash.
+
+------------------------------------------------------------------------------
+headline_pattern                                  *headlines-headline_pattern*
+
+    Specifies the lua patterns to match a headline.
+    The length of the match is used to determine the level of the headline.
+
+------------------------------------------------------------------------------
+headline_signs                                      *headlines-headline_signs*
+
+    A list of |sign|s that are used to highlight the headline.
+    The level of the headline is used as the index of the list.
+
+    To create new signs, define a highlight group, and create a new sign with
+    that highlight group.
+
+    `vim.cmd [[highlight SecondHeadline guibg=#333333]]`
+    `vim.fn.sign_define("SecondHeadline", { linehl = "SecondHeadline" })`
+
+------------------------------------------------------------------------------
+codeblock_sign                                      *headlines-codeblock_sign*
+
+    Specifies the |sign| that is used to highlight code blocks.
+
+------------------------------------------------------------------------------
+dash_highlight                                      *headlines-dash_highlight*
+
+    Specifies the |highlight| group that is used to highlight horizontal dashes.
+
+==============================================================================
+ 4. CHANGELOG                                            *headlines-changelog*
+
+1.0.0
+  * First release
+
+==============================================================================
+ 5. LICENSE                                                *headlines-license*
+
+The MIT Licence
+http://www.opensource.org/licenses/mit-license.php
+
+Copyright (c) 2021 Lukas Reineke
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl
