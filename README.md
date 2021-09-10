@@ -53,10 +53,10 @@ Default config:
 ````lua
 require("headlines").setup {
     markdown = {
-        source_pattern_start = "^```",
-        source_pattern_end = "^```$",
-        dash_pattern = "^---+$",
-        headline_pattern = "^#+",
+        source_pattern_start = "^%s*```+",
+        source_pattern_end = "^%s*```+$",
+        dash_pattern = "^%s*---+$",
+        headline_pattern = "^%s*#+",
         headline_signs = { "Headline" },
         codeblock_sign = "CodeBlock",
         dash_highlight = "Dash",
