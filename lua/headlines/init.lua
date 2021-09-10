@@ -5,8 +5,8 @@ M.sign_namespace = "headlines_sign_namespace"
 
 M.config = {
     markdown = {
-        source_pattern_start = "^```",
-        source_pattern_end = "^```$",
+        source_pattern_start = "^```+",
+        source_pattern_end = "^```+$",
         dash_pattern = "^---+$",
         headline_pattern = "^#+",
         headline_signs = { "Headline" },
