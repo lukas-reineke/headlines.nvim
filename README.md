@@ -82,6 +82,21 @@ require("headlines").setup {
 }
 ````
 
+To change any setting, pass a table with that option. Or add a completely new filetype.
+You can turn off highlighting by passing `false`
+
+```lua
+require("headlines").setup {
+    markdown = {
+        headline_pattern = false,
+    },
+    yaml = {
+        dash_pattern = "^---+$",
+        dash_highlight = "Dash",
+    }
+}
+```
+
 Please see `:help headlines.txt`for more details.
 
 ## Screenshots

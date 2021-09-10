@@ -101,7 +101,7 @@ Default config: >
 
 The table root is the |filetype|
 Each filetype has following options.
-To disable any of the options, set it to `nil`.
+To disable any of the options, set it to `false`.
 
 A lot of the options are lua patterns.
 To learn more about how lua pattern work, see here:
