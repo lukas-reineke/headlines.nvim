@@ -19,10 +19,12 @@ Use your favourite plugin manager to install.
 -- init.lua
 require("packer").startup(
     function()
-        use("lukas-reineke/headlines.nvim"),
-        config = function()
-            require("headlines").setup()
-        end
+          use {
+            'lukas-reineke/headlines.nvim',
+            config = function()
+              require('headlines').setup()
+            end,
+          }
     end
 )
 ```
