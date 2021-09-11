@@ -1,7 +1,7 @@
 # Headlines.nvim
 
 This plugin adds 3 kind of horizontal highlights for text filetypes, like
-`markdown`, `vimwiki` and `orgmode`.
+`markdown`, `rmd`, `vimwiki` and `orgmode`.
 
 1. Background highlighting for headlines
 2. Background highlighting for code blocks
@@ -55,6 +55,15 @@ Default config:
 ````lua
 require("headlines").setup {
     markdown = {
+        source_pattern_start = "^```",
+        source_pattern_end = "^```$",
+        dash_pattern = "^---+$",
+        headline_pattern = "^#+",
+        headline_signs = { "Headline" },
+        codeblock_sign = "CodeBlock",
+        dash_highlight = "Dash",
+    },
+    rmd = {
         source_pattern_start = "^```",
         source_pattern_end = "^```$",
         dash_pattern = "^---+$",
