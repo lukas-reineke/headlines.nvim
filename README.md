@@ -59,8 +59,8 @@ require("headlines").setup {
         source_pattern_end = "^```$",
         dash_pattern = "^---+$",
         headline_pattern = "^#+",
-        headline_signs = { "Headline" },
-        codeblock_sign = "CodeBlock",
+        headline_highlights = { "Headline" },
+        codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
     },
     rmd = {
@@ -77,8 +77,8 @@ require("headlines").setup {
         source_pattern_end = "^}}}$",
         dash_pattern = "^---+$",
         headline_pattern = "^=+",
-        headline_signs = { "Headline" },
-        codeblock_sign = "CodeBlock",
+        headline_highlights = { "Headline" },
+        codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
     },
     org = {
@@ -86,8 +86,8 @@ require("headlines").setup {
         source_pattern_end = "#%+[eE][nN][dD]_[sS][rR][cC]",
         dash_pattern = "^-----+$",
         headline_pattern = "^%*+",
-        headline_signs = { "Headline" },
-        codeblock_sign = "CodeBlock",
+        headline_highlights = { "Headline" },
+        codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
     },
 }
@@ -121,12 +121,10 @@ vim.cmd [[highlight Headline1 guibg=#1e2718]]
 vim.cmd [[highlight Headline2 guibg=#21262d]]
 vim.cmd [[highlight CodeBlock guibg=#1c1c1c]]
 vim.cmd [[highlight Dash guibg=#D19A66 gui=bold]]
-vim.fn.sign_define("Headline1", { linehl = "Headline1" })
-vim.fn.sign_define("Headline2", { linehl = "Headline2" })
 
 require("headlines").setup {
     org = {
-        headline_signs = { "Headline1", "Headline2" },
+        headline_highlights = { "Headline1", "Headline2" },
     },
 }
 ```

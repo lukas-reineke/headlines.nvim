@@ -1,7 +1,6 @@
 local M = {}
 
-M.dash_namespace = vim.api.nvim_create_namespace "headlines_dash_namespace"
-M.sign_namespace = "headlines_sign_namespace"
+M.namespace = vim.api.nvim_create_namespace "headlines_namespace"
 
 M.config = {
     markdown = {
@@ -9,8 +8,8 @@ M.config = {
         source_pattern_end = "^```$",
         dash_pattern = "^---+$",
         headline_pattern = "^#+",
-        headline_signs = { "Headline" },
-        codeblock_sign = "CodeBlock",
+        headline_highlights = { "Headline" },
+        codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
     },
     rmd = {
@@ -27,8 +26,8 @@ M.config = {
         source_pattern_end = "^}}}$",
         dash_pattern = "^---+$",
         headline_pattern = "^=+",
-        headline_signs = { "Headline" },
-        codeblock_sign = "CodeBlock",
+        headline_highlights = { "Headline" },
+        codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
     },
     org = {
@@ -36,8 +35,8 @@ M.config = {
         source_pattern_end = "#%+[eE][nN][dD]_[sS][rR][cC]",
         dash_pattern = "^-----+$",
         headline_pattern = "^%*+",
-        headline_signs = { "Headline" },
-        codeblock_sign = "CodeBlock",
+        headline_highlights = { "Headline" },
+        codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
     },
 }
@@ -58,9 +57,6 @@ end
 M.setup = function(config)
     M.config = vim.tbl_deep_extend("force", M.config, config or {})
 
-    vim.fn.sign_define("CodeBlock", { linehl = "CodeBlock" })
-    vim.fn.sign_define("Headline", { linehl = "Headline" })
-
     vim.cmd [[augroup Headlines]]
     vim.cmd [[autocmd FileChangedShellPost,Syntax,TextChanged,InsertLeave,WinScrolled * lua require('headlines').refresh()]]
     vim.cmd [[augroup END]]
@@ -69,8 +65,7 @@ end
 M.refresh = function()
     local c = M.config[vim.bo.filetype]
     local bufnr = vim.api.nvim_get_current_buf()
-    vim.fn.sign_unplace(M.sign_namespace, { buffer = bufnr })
-    vim.api.nvim_buf_clear_namespace(0, M.dash_namespace, 1, -1)
+    vim.api.nvim_buf_clear_namespace(0, M.namespace, 1, -1)
 
     if not c then
         return
@@ -85,14 +80,19 @@ M.refresh = function()
     local source = false
 
     for i = 1, #lines do
-        if c.source_pattern_start and c.source_pattern_end and c.codeblock_sign then
+        if c.source_pattern_start and c.source_pattern_end and c.codeblock_highlight then
             local _, source_start = lines[i]:find(c.source_pattern_start)
             if source_start then
                 source = true
             end
 
             if source then
-                vim.fn.sign_place(0, M.sign_namespace, c.codeblock_sign, bufnr, { lnum = i + offset })
+                vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
+                    end_col = 0,
+                    end_row = i + offset,
+                    hl_group = c.codeblock_highlight,
+                    hl_eol = true,
+                })
             end
 
             local _, source_end = lines[i]:find(c.source_pattern_end)
@@ -102,17 +102,16 @@ M.refresh = function()
             end
         end
 
-        if c.headline_pattern and c.headline_signs and #c.headline_signs > 0 then
+        if c.headline_pattern and c.headline_highlights and #c.headline_highlights > 0 then
             local _, headline = lines[i]:find(c.headline_pattern)
 
             if headline then
-                vim.fn.sign_place(
-                    0,
-                    M.sign_namespace,
-                    c.headline_signs[math.min(headline, #c.headline_signs)],
-                    bufnr,
-                    { lnum = i + offset }
-                )
+                vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
+                    end_col = 0,
+                    end_row = i + offset,
+                    hl_group = c.headline_highlights[math.min(headline, #c.headline_highlights)],
+                    hl_eol = true,
+                })
             end
         end
 
