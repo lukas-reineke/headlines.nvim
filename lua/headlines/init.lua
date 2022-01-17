@@ -118,7 +118,7 @@ M.refresh = function()
         if c.dash_pattern and c.dash_highlight then
             local _, dashes = lines[i]:find(c.dash_pattern)
             if dashes then
-                vim.api.nvim_buf_set_extmark(bufnr, M.dash_namespace, i - 1 + offset, 0, {
+                vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
                     virt_text = { { ("-"):rep(vim.api.nvim_win_get_width(0)), c.dash_highlight } },
                     virt_text_pos = "overlay",
                     hl_mode = "combine",
