@@ -2,7 +2,7 @@
 
 
 Author: Lukas Reineke <lukas.reineke@protonmail.com>
-Version: 2.0.1
+Version: 2.1.0
 
 ==============================================================================
 CONTENTS                                                           *headlines*
@@ -78,6 +78,7 @@ Default config: >
           headline_highlights = { "Headline" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
+          fat_headlines = true,
       },
       rmd = {
           source_pattern_start = "^```",
@@ -87,6 +88,7 @@ Default config: >
           headline_signs = { "Headline" },
           codeblock_sign = "CodeBlock",
           dash_highlight = "Dash",
+          fat_headlines = true,
       },
       vimwiki = {
           source_pattern_start = "^{{{%a+",
@@ -96,6 +98,7 @@ Default config: >
           headline_highlights = { "Headline" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
+          fat_headlines = true,
       },
       org = {
           source_pattern_start = "#%+[bB][eE][gG][iI][nN]_[sS][rR][cC]",
@@ -105,6 +108,7 @@ Default config: >
           headline_highlights = { "Headline" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
+          fat_headlines = true,
       },
   }
 
@@ -153,8 +157,16 @@ dash_highlight                                      *headlines-dash_highlight*
 
     Specifies the |highlight| group that is used to highlight horizontal dashes.
 
+------------------------------------------------------------------------------
+fat_headlines                                        *headlines-fat_headlines*
+
+    Boolean to turn on fat headlines.
+
 ==============================================================================
  4. CHANGELOG                                            *headlines-changelog*
+
+2.1.0
+  * Add |headlines-fat_headlines|
 
 2.0.1
   * Fix dash namespace

@@ -62,6 +62,7 @@ require("headlines").setup {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        fat_headlines = true,
     },
     rmd = {
         source_pattern_start = "^```",
@@ -71,6 +72,7 @@ require("headlines").setup {
         headline_signs = { "Headline" },
         codeblock_sign = "CodeBlock",
         dash_highlight = "Dash",
+        fat_headlines = true,
     },
     vimwiki = {
         source_pattern_start = "^{{{%a+",
@@ -80,6 +82,7 @@ require("headlines").setup {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        fat_headlines = true,
     },
     org = {
         source_pattern_start = "#%+[bB][eE][gG][iI][nN]_[sS][rR][cC]",
@@ -89,6 +92,7 @@ require("headlines").setup {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        fat_headlines = true,
     },
 }
 ````
@@ -129,4 +133,4 @@ require("headlines").setup {
 }
 ```
 
-<img width="900" src="https://i.imgur.com/0tLcXDv.jpg" alt="Screenshot" />
+<img width="900" src="https://user-images.githubusercontent.com/12900252/152090098-f0fe7ad5-efea-42d9-b3d7-a4bfd6391189.png" alt="Screenshot" />
