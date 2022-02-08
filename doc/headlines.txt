@@ -60,7 +60,7 @@ Dash                                                                 *hl-Dash*
 
     Example: >
 
-        highlight link CodeBlock LineNr
+        highlight link Dash LineNr
 
 ==============================================================================
  3. SETUP                                                    *headlines-setup*
