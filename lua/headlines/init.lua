@@ -11,6 +11,7 @@ M.config = {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        dash_string = "-",
         fat_headlines = true,
     },
     rmd = {
@@ -21,6 +22,7 @@ M.config = {
         headline_signs = { "Headline" },
         codeblock_sign = "CodeBlock",
         dash_highlight = "Dash",
+        dash_string = "-",
         fat_headlines = true,
     },
     vimwiki = {
@@ -31,6 +33,7 @@ M.config = {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        dash_string = "-",
         fat_headlines = true,
     },
     org = {
@@ -41,6 +44,7 @@ M.config = {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        dash_string = "-",
         fat_headlines = true,
     },
 }
@@ -173,7 +177,7 @@ M.refresh = function()
             local _, dashes = lines[i]:find(c.dash_pattern)
             if dashes then
                 vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
-                    virt_text = { { ("-"):rep(width), c.dash_highlight } },
+                    virt_text = { { (c.dash_string):rep(width), c.dash_highlight } },
                     virt_text_pos = "overlay",
                     hl_mode = "combine",
                 })
