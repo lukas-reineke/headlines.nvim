@@ -174,9 +174,6 @@ fat_headlines                                        *headlines-fat_headlines*
 ==============================================================================
  4. CHANGELOG                                            *headlines-changelog*
 
-2.1.2
-  * Add |headlines-dash_string|
-
 2.1.1
   * Fix typo in docs
 
