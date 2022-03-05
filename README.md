@@ -62,6 +62,7 @@ require("headlines").setup {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        dash_string = "-",
         fat_headlines = true,
     },
     rmd = {
@@ -72,6 +73,7 @@ require("headlines").setup {
         headline_signs = { "Headline" },
         codeblock_sign = "CodeBlock",
         dash_highlight = "Dash",
+        dash_string = "-",
         fat_headlines = true,
     },
     vimwiki = {
@@ -82,6 +84,7 @@ require("headlines").setup {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        dash_string = "-",
         fat_headlines = true,
     },
     org = {
@@ -92,6 +95,7 @@ require("headlines").setup {
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
+        dash_string = "-",
         fat_headlines = true,
     },
 }
