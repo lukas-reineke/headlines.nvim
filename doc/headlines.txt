@@ -2,7 +2,7 @@
 
 
 Author: Lukas Reineke <lukas.reineke@protonmail.com>
-Version: 2.1.1
+Version: 2.2.0
 
 ==============================================================================
 CONTENTS                                                           *headlines*
@@ -173,6 +173,9 @@ fat_headlines                                        *headlines-fat_headlines*
 
 ==============================================================================
  4. CHANGELOG                                            *headlines-changelog*
+
+2.2.0
+  * Add |headlines-dash_string|
 
 2.1.1
   * Fix typo in docs
