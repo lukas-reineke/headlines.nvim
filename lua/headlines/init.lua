@@ -104,13 +104,13 @@ M.refresh = function()
     local source = false
 
     for i = 1, #lines do
-        if c.source_pattern_start and c.source_pattern_end and c.codeblock_highlight then
+        if c.source_pattern_start and c.source_pattern_end then
             local _, source_start = lines[i]:find(c.source_pattern_start)
             if source_start then
                 source = true
             end
 
-            if source then
+            if source and c.codeblock_highlight then
                 vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
                     end_col = 0,
                     end_row = i + offset,
@@ -126,7 +126,7 @@ M.refresh = function()
             end
         end
 
-        if c.headline_pattern and c.headline_highlights and #c.headline_highlights > 0 then
+        if not source and c.headline_pattern and c.headline_highlights and #c.headline_highlights > 0 then
             local _, headline = lines[i]:find(c.headline_pattern)
 
             if headline then
@@ -173,11 +173,11 @@ M.refresh = function()
             end
         end
 
-        if c.dash_pattern and c.dash_highlight then
+        if not source and c.dash_pattern and c.dash_highlight then
             local _, dashes = lines[i]:find(c.dash_pattern)
             if dashes then
                 vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
-                    virt_text = { { (c.dash_string):rep(width), c.dash_highlight } },
+                    virt_text = { { c.dash_string:rep(width), c.dash_highlight } },
                     virt_text_pos = "overlay",
                     hl_mode = "combine",
                 })
