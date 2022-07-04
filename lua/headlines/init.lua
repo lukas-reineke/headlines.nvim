@@ -1,13 +1,27 @@
 local M = {}
 
 M.namespace = vim.api.nvim_create_namespace "headlines_namespace"
+local q = require "vim.treesitter.query"
 
 M.config = {
     markdown = {
-        source_pattern_start = "^```",
-        source_pattern_end = "^```$",
-        dash_pattern = "^---+$",
-        headline_pattern = "^#+",
+        query = vim.treesitter.parse_query(
+            "markdown",
+            [[
+                (atx_heading [
+                    (atx_h1_marker)
+                    (atx_h2_marker)
+                    (atx_h3_marker)
+                    (atx_h4_marker)
+                    (atx_h5_marker)
+                    (atx_h6_marker)
+                ] @headline)
+
+                (thematic_break) @dash
+
+                (fenced_code_block) @codeblock
+            ]]
+        ),
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
@@ -15,21 +29,24 @@ M.config = {
         fat_headlines = true,
     },
     rmd = {
-        source_pattern_start = "^```",
-        source_pattern_end = "^```$",
-        dash_pattern = "^---+$",
-        headline_pattern = "^#+",
-        headline_highlights = { "Headline" },
-        codeblock_highlight = "CodeBlock",
-        dash_highlight = "Dash",
-        dash_string = "-",
-        fat_headlines = true,
-    },
-    vimwiki = {
-        source_pattern_start = "^{{{%a+",
-        source_pattern_end = "^}}}$",
-        dash_pattern = "^---+$",
-        headline_pattern = "^=+",
+        query = vim.treesitter.parse_query(
+            "markdown",
+            [[
+                (atx_heading [
+                    (atx_h1_marker)
+                    (atx_h2_marker)
+                    (atx_h3_marker)
+                    (atx_h4_marker)
+                    (atx_h5_marker)
+                    (atx_h6_marker)
+                ] @headline)
+
+                (thematic_break) @dash
+
+                (fenced_code_block) @codeblock
+            ]]
+        ),
+        treesitter_language = "markdown",
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
@@ -37,10 +54,22 @@ M.config = {
         fat_headlines = true,
     },
     org = {
-        source_pattern_start = "#%+[bB][eE][gG][iI][nN]_[sS][rR][cC]",
-        source_pattern_end = "#%+[eE][nN][dD]_[sS][rR][cC]",
-        dash_pattern = "^-----+$",
-        headline_pattern = "^%*+",
+        query = vim.treesitter.parse_query(
+            "org",
+            [[
+                (headline (stars) @headline)
+
+                (
+                    (expr) @dash
+                    (#match? @dash "^---+$")
+                )
+
+                (block
+                    name: (expr) @_name
+                    (#eq? @_name "SRC")
+                ) @codeblock
+            ]]
+        ),
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
@@ -87,60 +116,38 @@ M.setup = function(config)
     ]]
 end
 
+local nvim_buf_set_extmark = function(...)
+    pcall(vim.api.nvim_buf_set_extmark, ...)
+end
+
 M.refresh = function()
     local c = M.config[vim.bo.filetype]
     local bufnr = vim.api.nvim_get_current_buf()
     vim.api.nvim_buf_clear_namespace(0, M.namespace, 0, -1)
+    local language = c.treesitter_language or vim.bo.filetype
 
-    if not c then
+    if not c or not c.query then
         return
     end
 
-    local offset = math.max(vim.fn.line "w0" - 1, 0)
-    local range = math.min(vim.fn.line "w$", vim.api.nvim_buf_line_count(bufnr))
-    local lines = vim.api.nvim_buf_get_lines(bufnr, offset, range, false)
-    local width = vim.api.nvim_win_get_width(0)
+    local language_tree = vim.treesitter.get_parser(bufnr, language)
+    local syntax_tree = language_tree:parse()
+    local root = syntax_tree[1]:root()
     local win_view = vim.fn.winsaveview()
     local left_offset = win_view.leftcol
+    local width = vim.api.nvim_win_get_width(0)
 
-    local source = false
-    local code_block_padding = 0
+    for _, match, _ in c.query:iter_matches(root, bufnr) do
+        for id, node in pairs(match) do
+            local capture = c.query.captures[id]
 
-    for i = 1, #lines do
-        if c.source_pattern_start and c.source_pattern_end then
-            local _, source_start = lines[i]:find(c.source_pattern_start)
-            if source_start then
-                local _, padding = lines[i]:find "^ +"
-                code_block_padding = math.max((padding or 0) - left_offset, 0)
-                source = true
-            end
-
-            if source and c.codeblock_highlight then
-                vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
-                    virt_text = { { string.rep(" ", code_block_padding), "Normal" } },
-                    virt_text_win_col = 0,
+            if capture == "headline" then
+                local level = #q.get_node_text(node, bufnr)
+                local hl_group = c.headline_highlights[math.min(level, #c.headline_highlights)]
+                local start = node:start()
+                nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                     end_col = 0,
-                    end_row = i + offset,
-                    hl_group = c.codeblock_highlight,
-                    hl_eol = true,
-                })
-            end
-
-            local _, source_end = lines[i]:find(c.source_pattern_end)
-
-            if source_end then
-                source = false
-            end
-        end
-
-        if not source and c.headline_pattern and c.headline_highlights and #c.headline_highlights > 0 then
-            local _, headline = lines[i]:find(c.headline_pattern)
-
-            if headline then
-                local hl_group = c.headline_highlights[math.min(headline, #c.headline_highlights)]
-                vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
-                    end_col = 0,
-                    end_row = i + offset,
+                    end_row = start + 1,
                     hl_group = hl_group,
                     hl_eol = true,
                 })
@@ -149,45 +156,70 @@ M.refresh = function()
                     local reverse_hl_group = M.make_reverse_highlight(hl_group)
 
                     local padding_above = { { ("▂"):rep(width), reverse_hl_group } }
-                    local line_above = lines[i - 1]
-                    if line_above == "" then
-                        vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 2 + offset, 0, {
-                            virt_text = padding_above,
-                            virt_text_pos = "overlay",
-                            hl_mode = "combine",
-                        })
-                    else
-                        vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
-                            virt_lines_above = true,
-                            virt_lines = { padding_above },
-                        })
+                    if start > 0 then
+                        local line_above = vim.api.nvim_buf_get_lines(bufnr, start - 1, start, false)[1]
+                        if line_above == "" then
+                            nvim_buf_set_extmark(bufnr, M.namespace, start - 1, 0, {
+                                virt_text = padding_above,
+                                virt_text_pos = "overlay",
+                                hl_mode = "combine",
+                            })
+                        else
+                            nvim_buf_set_extmark(bufnr, M.namespace, start - 1, 0, {
+                                virt_lines_above = true,
+                                virt_lines = { padding_above },
+                            })
+                        end
                     end
 
                     local padding_below = { { ("▔"):rep(width), reverse_hl_group } }
-                    local line_below = lines[i + 1]
+                    local line_below = vim.api.nvim_buf_get_lines(bufnr, start + 1, start + 2, false)[1]
                     if line_below == "" then
-                        vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i + offset, 0, {
+                        nvim_buf_set_extmark(bufnr, M.namespace, start + 1, 0, {
                             virt_text = padding_below,
                             virt_text_pos = "overlay",
                             hl_mode = "combine",
                         })
                     else
-                        vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
+                        nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                             virt_lines = { padding_below },
                         })
                     end
                 end
             end
-        end
 
-        if not source and c.dash_pattern and c.dash_highlight then
-            local _, dashes = lines[i]:find(c.dash_pattern)
-            if dashes then
-                vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
+            if capture == "dash" then
+                local start = node:start()
+                nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                     virt_text = { { c.dash_string:rep(width), c.dash_highlight } },
                     virt_text_pos = "overlay",
                     hl_mode = "combine",
                 })
+            end
+
+            if capture == "codeblock" then
+                local start = node:start()
+                local end_ = node:end_()
+                nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
+                    end_col = 0,
+                    end_row = end_,
+                    hl_group = c.codeblock_highlight,
+                    hl_eol = true,
+                })
+
+                local start_line = vim.api.nvim_buf_get_lines(bufnr, start, start + 1, false)[1]
+                local _, padding = start_line:find "^ +"
+                local codeblock_padding = math.max((padding or 0) - left_offset, 0)
+
+                if codeblock_padding > 0 then
+                    for i = start, end_ do
+                        nvim_buf_set_extmark(bufnr, M.namespace, i, 0, {
+                            virt_text = { { string.rep(" ", codeblock_padding), "Normal" } },
+                            virt_text_win_col = 0,
+                            priority = 1,
+                        })
+                    end
+                end
             end
         end
     end
