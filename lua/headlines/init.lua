@@ -124,12 +124,12 @@ M.refresh = function()
     local c = M.config[vim.bo.filetype]
     local bufnr = vim.api.nvim_get_current_buf()
     vim.api.nvim_buf_clear_namespace(0, M.namespace, 0, -1)
-    local language = c.treesitter_language or vim.bo.filetype
 
     if not c or not c.query then
         return
     end
 
+    local language = c.treesitter_language or vim.bo.filetype
     local language_tree = vim.treesitter.get_parser(bufnr, language)
     local syntax_tree = language_tree:parse()
     local root = syntax_tree[1]:root()
