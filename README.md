@@ -1,11 +1,12 @@
 # Headlines.nvim
 
-This plugin adds 3 kind of horizontal highlights for text filetypes, like
-`markdown`, `rmd`, `vimwiki` and `orgmode`.
+This plugin adds horizontal highlights for text filetypes, like `markdown` and `orgmode`.
 
 1. Background highlighting for headlines
 2. Background highlighting for code blocks
 3. Whole window separator for horizontal line
+
+Treesitter grammar needs to be installed for the languages.
 
 ## Install
 
@@ -19,12 +20,12 @@ Use your favourite plugin manager to install.
 -- init.lua
 require("packer").startup(
     function()
-          use {
+        use {
             'lukas-reineke/headlines.nvim',
             config = function()
-              require('headlines').setup()
+                require('headlines').setup()
             end,
-          }
+        }
     end
 )
 ```
@@ -52,13 +53,26 @@ To configure headlines.nvim pass a config table into the setup function.
 
 Default config:
 
-````lua
+```lua
 require("headlines").setup {
     markdown = {
-        source_pattern_start = "^```",
-        source_pattern_end = "^```$",
-        dash_pattern = "^---+$",
-        headline_pattern = "^#+",
+        query = vim.treesitter.parse_query(
+            "markdown",
+            [[
+                (atx_heading [
+                    (atx_h1_marker)
+                    (atx_h2_marker)
+                    (atx_h3_marker)
+                    (atx_h4_marker)
+                    (atx_h5_marker)
+                    (atx_h6_marker)
+                ] @headline)
+
+                (thematic_break) @dash
+
+                (fenced_code_block) @codeblock
+            ]]
+        ),
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
@@ -66,21 +80,24 @@ require("headlines").setup {
         fat_headlines = true,
     },
     rmd = {
-        source_pattern_start = "^```",
-        source_pattern_end = "^```$",
-        dash_pattern = "^---+$",
-        headline_pattern = "^#+",
-        headline_signs = { "Headline" },
-        codeblock_sign = "CodeBlock",
-        dash_highlight = "Dash",
-        dash_string = "-",
-        fat_headlines = true,
-    },
-    vimwiki = {
-        source_pattern_start = "^{{{%a+",
-        source_pattern_end = "^}}}$",
-        dash_pattern = "^---+$",
-        headline_pattern = "^=+",
+        query = vim.treesitter.parse_query(
+            "markdown",
+            [[
+                (atx_heading [
+                    (atx_h1_marker)
+                    (atx_h2_marker)
+                    (atx_h3_marker)
+                    (atx_h4_marker)
+                    (atx_h5_marker)
+                    (atx_h6_marker)
+                ] @headline)
+
+                (thematic_break) @dash
+
+                (fenced_code_block) @codeblock
+            ]]
+        ),
+        treesitter_language = "markdown",
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
@@ -88,10 +105,22 @@ require("headlines").setup {
         fat_headlines = true,
     },
     org = {
-        source_pattern_start = "#%+[bB][eE][gG][iI][nN]_[sS][rR][cC]",
-        source_pattern_end = "#%+[eE][nN][dD]_[sS][rR][cC]",
-        dash_pattern = "^-----+$",
-        headline_pattern = "^%*+",
+        query = vim.treesitter.parse_query(
+            "org",
+            [[
+                (headline (stars) @headline)
+
+                (
+                    (expr) @dash
+                    (#match? @dash "^---+$")
+                )
+
+                (block
+                    name: (expr) @_name
+                    (#eq? @_name "SRC")
+                ) @codeblock
+            ]]
+        ),
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
@@ -99,24 +128,37 @@ require("headlines").setup {
         fat_headlines = true,
     },
 }
-````
+```
 
 To change any setting, pass a table with that option. Or add a completely new filetype.
-You can turn off highlighting by passing `false`
+You can turn off highlighting by removing that part from the query.
 
 ```lua
 require("headlines").setup {
     markdown = {
-        headline_pattern = false,
+        query = vim.treesitter.parse_query(
+            "markdown",
+            [[
+                (fenced_code_block) @codeblock
+            ]]
+        ),
     },
     yaml = {
-        dash_pattern = "^---+$",
+        query = vim.treesitter.parse_query(
+            "yaml",
+            [[
+                (
+                    (comment) @dash
+                    (#match? @dash "^# ---+$")
+                )
+            ]]
+        ),
         dash_highlight = "Dash",
     }
 }
 ```
 
-Please see `:help headlines.txt`for more details.
+Please see `:help headlines.txt` for more details.
 
 ## Screenshots
 

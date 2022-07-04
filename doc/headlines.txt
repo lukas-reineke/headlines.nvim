@@ -2,7 +2,7 @@
 
 
 Author: Lukas Reineke <lukas.reineke@protonmail.com>
-Version: 2.2.2
+Version: 3.0.0
 
 ==============================================================================
 CONTENTS                                                           *headlines*
@@ -10,18 +10,19 @@ CONTENTS                                                           *headlines*
   1. Introduction                               |headlines-introduction|
   2. Highlights                                 |headlines-highlights|
   3. Setup                                      |headlines-setup|
-  4. Changelog                                  |headlines-changelog|
-  5. License                                    |headlines-license|
+  4. License                                    |headlines-license|
 
 ==============================================================================
  1. INTRODUCTION                                      *headlines-introduction*
 
-This plugin adds 3 kind of horizontal highlights for text filetypes, like
-`markdown`, `rmd`, `vimwiki` and `orgmode`.
+This plugin adds horizontal highlights for text filetypes, like `markdown` and
+`orgmode`.
 
 1. Background highlighting for headlines
 2. Background highlighting for code blocks
 3. Whole window separator for horizontal line
+
+Treesitter grammar needs to be installed for the languages.
 
 ==============================================================================
  2. HIGHLIGHTS                                          *headlines-highlights*
@@ -71,10 +72,23 @@ Default config: >
 
   require("headlines").setup {
       markdown = {
-          source_pattern_start = "^```",
-          source_pattern_end = "^```$",
-          dash_pattern = "^---+$",
-          headline_pattern = "^#+",
+          query = vim.treesitter.parse_query(
+              "markdown",
+              [[
+                  (atx_heading [
+                      (atx_h1_marker)
+                      (atx_h2_marker)
+                      (atx_h3_marker)
+                      (atx_h4_marker)
+                      (atx_h5_marker)
+                      (atx_h6_marker)
+                  ] @headline)
+
+                  (thematic_break) @dash
+
+                  (fenced_code_block) @codeblock
+              ]]
+          ),
           headline_highlights = { "Headline" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
@@ -82,21 +96,24 @@ Default config: >
           fat_headlines = true,
       },
       rmd = {
-          source_pattern_start = "^```",
-          source_pattern_end = "^```$",
-          dash_pattern = "^---+$",
-          headline_pattern = "^#+",
-          headline_signs = { "Headline" },
-          codeblock_sign = "CodeBlock",
-          dash_highlight = "Dash",
-          dash_string = "-",
-          fat_headlines = true,
-      },
-      vimwiki = {
-          source_pattern_start = "^{{{%a+",
-          source_pattern_end = "^}}}$",
-          dash_pattern = "^---+$",
-          headline_pattern = "^=+",
+          query = vim.treesitter.parse_query(
+              "markdown",
+              [[
+                  (atx_heading [
+                      (atx_h1_marker)
+                      (atx_h2_marker)
+                      (atx_h3_marker)
+                      (atx_h4_marker)
+                      (atx_h5_marker)
+                      (atx_h6_marker)
+                  ] @headline)
+
+                  (thematic_break) @dash
+
+                  (fenced_code_block) @codeblock
+              ]]
+          ),
+          treesitter_language = "markdown",
           headline_highlights = { "Headline" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
@@ -104,10 +121,22 @@ Default config: >
           fat_headlines = true,
       },
       org = {
-          source_pattern_start = "#%+[bB][eE][gG][iI][nN]_[sS][rR][cC]",
-          source_pattern_end = "#%+[eE][nN][dD]_[sS][rR][cC]",
-          dash_pattern = "^-----+$",
-          headline_pattern = "^%*+",
+          query = vim.treesitter.parse_query(
+              "org",
+              [[
+                  (headline (stars) @headline)
+
+                  (
+                      (expr) @dash
+                      (#match? @dash "^---+$")
+                  )
+
+                  (block
+                      name: (expr) @_name
+                      (#eq? @_name "SRC")
+                  ) @codeblock
+              ]]
+          ),
           headline_highlights = { "Headline" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
@@ -125,25 +154,16 @@ To learn more about how lua pattern work, see here:
 https://www.lua.org/manual/5.1/manual.html#5.4.1
 
 ------------------------------------------------------------------------------
-source_pattern_start                          *headlines-source_pattern_start*
+query                                                        *headlines-query*
 
-    Specifies the lua patterns to match the start of a code block.
+    Specifies the treesitter query that captures different parts to highlight.
 
-------------------------------------------------------------------------------
-source_pattern_end                              *headlines-source_pattern_end*
-
-    Specifies the lua patterns to match the end of a code block.
+    The captures need to be named `headline`, `dash`, and `codeblock`
 
 ------------------------------------------------------------------------------
-dash_pattern                                          *headlines-dash_pattern*
+treesitter_language                            *headlines-treesitter_language*
 
-    Specifies the lua patterns to match a horizontal dash.
-
-------------------------------------------------------------------------------
-headline_pattern                                  *headlines-headline_pattern*
-
-    Specifies the lua patterns to match a headline.
-    The length of the match is used to determine the level of the headline.
+    Specifies the language to use for treesitter, defaults to the filetype.
 
 ------------------------------------------------------------------------------
 headline_highlights                            *headlines-headline_highlights*
@@ -172,43 +192,12 @@ fat_headlines                                        *headlines-fat_headlines*
     Boolean to turn on fat headlines.
 
 ==============================================================================
- 4. CHANGELOG                                            *headlines-changelog*
-
-2.2.2
-   Fix `rmd` default config
-
-2.2.1
-  * Don't render headlines of dashes in codeblocks
-
-2.2.0
-  * Add |headlines-dash_string|
-
-2.1.1
-  * Fix typo in docs
-
-2.1.0
-  * Add |headlines-fat_headlines|
-
-2.0.1
-  * Fix dash namespace
-
-2.0.0
-  * Remove the use of signs [BREAKING CHANGE]
-  * `headline_signs` is renamed to `headline_highlights` and takes a list of
-    highlight groups instead of a list of signs.
-  * `codeblock_sign` is renamed to `codeblock_highlight` and takes a highlight
-    group instead of a sign.
-
-1.0.0
-  * First release
-
-==============================================================================
- 5. LICENSE                                                *headlines-license*
+ 4. LICENSE                                                *headlines-license*
 
 The MIT Licence
 http://www.opensource.org/licenses/mit-license.php
 
-Copyright (c) 2021 Lukas Reineke
+Copyright (c) 2022 Lukas Reineke
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
