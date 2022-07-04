@@ -100,18 +100,25 @@ M.refresh = function()
     local range = math.min(vim.fn.line "w$", vim.api.nvim_buf_line_count(bufnr))
     local lines = vim.api.nvim_buf_get_lines(bufnr, offset, range, false)
     local width = vim.api.nvim_win_get_width(0)
+    local win_view = vim.fn.winsaveview()
+    local left_offset = win_view.leftcol
 
     local source = false
+    local code_block_padding = 0
 
     for i = 1, #lines do
         if c.source_pattern_start and c.source_pattern_end then
             local _, source_start = lines[i]:find(c.source_pattern_start)
             if source_start then
+                local _, padding = lines[i]:find "^ +"
+                code_block_padding = math.max((padding or 0) - left_offset, 0)
                 source = true
             end
 
             if source and c.codeblock_highlight then
                 vim.api.nvim_buf_set_extmark(bufnr, M.namespace, i - 1 + offset, 0, {
+                    virt_text = { { string.rep(" ", code_block_padding), "Normal" } },
+                    virt_text_win_col = 0,
                     end_col = 0,
                     end_row = i + offset,
                     hl_group = c.codeblock_highlight,
