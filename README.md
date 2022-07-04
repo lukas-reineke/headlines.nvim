@@ -1,10 +1,11 @@
 # Headlines.nvim
 
-This plugin adds horizontal highlights for text filetypes, like `markdown`, `orgmode`, and `neorg`.
+This plugin adds highlights for text filetypes, like `markdown`, `orgmode`, and `neorg`.
 
 1. Background highlighting for headlines
 2. Background highlighting for code blocks
 3. Whole window separator for horizontal line
+4. Bar for Quotes
 
 Treesitter grammar needs to be installed for the languages.
 
@@ -71,12 +72,17 @@ require("headlines").setup {
                 (thematic_break) @dash
 
                 (fenced_code_block) @codeblock
+
+                (block_quote_marker) @quote
+                (block_quote (paragraph (inline (block_continuation) @quote)))
             ]]
         ),
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
+        quote_highlight = "Quote",
+        quote_string = "┃",
         fat_headlines = true,
     },
     rmd = {
@@ -95,6 +101,9 @@ require("headlines").setup {
                 (thematic_break) @dash
 
                 (fenced_code_block) @codeblock
+
+                (block_quote_marker) @quote
+                (block_quote (paragraph (inline (block_continuation) @quote)))
             ]]
         ),
         treesitter_language = "markdown",
@@ -102,6 +111,8 @@ require("headlines").setup {
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
+        quote_highlight = "Quote",
+        quote_string = "┃",
         fat_headlines = true,
     },
     norg = {
@@ -124,6 +135,8 @@ require("headlines").setup {
                     name: (tag_name) @_name
                     (#eq? @_name "code")
                 ) @codeblock (#offset! @codeblock 0 0 1 0))
+
+                (quote1_prefix) @quote
             ]]
         ),
         headline_highlights = { "Headline" },
@@ -132,6 +145,8 @@ require("headlines").setup {
         dash_string = "-",
         doubledash_highlight = "DoubleDash",
         doubledash_string = "=",
+        quote_highlight = "Quote",
+        quote_string = "┃",
         fat_headlines = true,
     },
     org = {
@@ -149,12 +164,18 @@ require("headlines").setup {
                     name: (expr) @_name
                     (#eq? @_name "SRC")
                 ) @codeblock
+
+                (paragraph . (expr) @quote
+                    (#eq? @quote ">")
+                )
             ]]
         ),
         headline_highlights = { "Headline" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
+        quote_highlight = "Quote",
+        quote_string = "┃",
         fat_headlines = true,
     },
 }

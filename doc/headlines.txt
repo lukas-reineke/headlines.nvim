@@ -2,7 +2,7 @@
 
 
 Author: Lukas Reineke <lukas.reineke@protonmail.com>
-Version: 3.1.2
+Version: 3.2.0
 
 ==============================================================================
 CONTENTS                                                           *headlines*
@@ -15,19 +15,20 @@ CONTENTS                                                           *headlines*
 ==============================================================================
  1. INTRODUCTION                                      *headlines-introduction*
 
-This plugin adds horizontal highlights for text filetypes, like `markdown`,
+This plugin adds highlights for text filetypes, like `markdown`,
 `orgmode`, and `neorg`.
 
 1. Background highlighting for headlines
 2. Background highlighting for code blocks
 3. Whole window separator for horizontal line
+4. Bar for Quotes
 
 Treesitter grammar needs to be installed for the languages.
 
 ==============================================================================
  2. HIGHLIGHTS                                          *headlines-highlights*
 
-There are 4 highlight groups that get created by default.
+There are 5 highlight groups that get created by default.
 You can overwrite them or create more yourself.
 
 ------------------------------------------------------------------------------
@@ -74,6 +75,17 @@ DoubleDash                                                     *hl-DoubleDash*
 
         highlight link DoubleDash LineNr
 
+------------------------------------------------------------------------------
+Quote                                                               *hl-Quote*
+
+    This highlight group is used for the quote bar.
+
+    Default: links to |hl-LineNr|
+
+    Example: >
+
+        highlight link Quote LineNr
+
 ==============================================================================
  3. SETUP                                                    *headlines-setup*
 
@@ -98,12 +110,17 @@ Default config: >
                   (thematic_break) @dash
 
                   (fenced_code_block) @codeblock
+
+                  (block_quote_marker) @quote
+                  (block_quote (paragraph (inline (block_continuation) @quote)))
               ]]
           ),
           headline_highlights = { "Headline" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
           dash_string = "-",
+          quote_highlight = "Quote",
+          quote_string = "┃",
           fat_headlines = true,
       },
       rmd = {
@@ -122,6 +139,9 @@ Default config: >
                   (thematic_break) @dash
 
                   (fenced_code_block) @codeblock
+
+                  (block_quote_marker) @quote
+                  (block_quote (paragraph (inline (block_continuation) @quote)))
               ]]
           ),
           treesitter_language = "markdown",
@@ -129,6 +149,8 @@ Default config: >
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
           dash_string = "-",
+          quote_highlight = "Quote",
+          quote_string = "┃",
           fat_headlines = true,
       },
       norg = {
@@ -151,6 +173,8 @@ Default config: >
                       name: (tag_name) @_name
                       (#eq? @_name "code")
                   ) @codeblock (#offset! @codeblock 0 0 1 0))
+
+                  (quote1_prefix) @quote
               ]]
           ),
           headline_highlights = { "Headline" },
@@ -159,6 +183,8 @@ Default config: >
           dash_string = "-",
           doubledash_highlight = "DoubleDash",
           doubledash_string = "=",
+          quote_highlight = "Quote",
+          quote_string = "┃",
           fat_headlines = true,
       },
       org = {
@@ -176,12 +202,18 @@ Default config: >
                       name: (expr) @_name
                       (#eq? @_name "SRC")
                   ) @codeblock
+
+                  (paragraph . (expr) @quote
+                      (#eq? @quote ">")
+                  )
               ]]
           ),
           headline_highlights = { "Headline" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
           dash_string = "-",
+          quote_highlight = "Quote",
+          quote_string = "┃",
           fat_headlines = true,
       },
   }
@@ -213,6 +245,11 @@ headline_highlights                            *headlines-headline_highlights*
     The level of the headline is used as the index of the list.
 
 ------------------------------------------------------------------------------
+fat_headlines                                        *headlines-fat_headlines*
+
+    Boolean to turn on fat headlines.
+
+------------------------------------------------------------------------------
 codeblock_highlight                            *headlines-codeblock_highlight*
 
     Specifies the |highlight| grop that is used to highlight code blocks.
@@ -228,9 +265,25 @@ dash_string                                            *headlines-dash_string*
     Specifies the string that is repeated to display horizontal dashes.
 
 ------------------------------------------------------------------------------
-fat_headlines                                        *headlines-fat_headlines*
+doubledash_highlight                          *headlines-doubledash_highlight*
 
-    Boolean to turn on fat headlines.
+    Specifies the |highlight| group that is used to highlight horizontal
+    doubledashes.
+
+------------------------------------------------------------------------------
+doubledash_string                                *headlines-doubledash_string*
+
+    Specifies the string that is repeated to display horizontal doubledashes.
+
+------------------------------------------------------------------------------
+quote_highlight                                      *headlines-quote_highlight*
+
+    Specifies the |highlight| group that is used to highlight quotes.
+
+------------------------------------------------------------------------------
+quote_string                                            *headlines-quote_string*
+
+    Specifies the string that is used to display quotes.
 
 ==============================================================================
  4. LICENSE                                                *headlines-license*
