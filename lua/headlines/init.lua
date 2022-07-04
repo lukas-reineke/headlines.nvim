@@ -3,7 +3,7 @@ local M = {}
 M.namespace = vim.api.nvim_create_namespace "headlines_namespace"
 local q = require "vim.treesitter.query"
 
-local load_query_save = function(language, query)
+local parse_query_save = function(language, query)
     local ok, parsed_query = pcall(vim.treesitter.parse_query, language, query)
     if not ok then
         return nil
@@ -13,7 +13,7 @@ end
 
 M.config = {
     markdown = {
-        query = load_query_save(
+        query = parse_query_save(
             "markdown",
             [[
                 (atx_heading [
@@ -37,7 +37,7 @@ M.config = {
         fat_headlines = true,
     },
     rmd = {
-        query = load_query_save(
+        query = parse_query_save(
             "markdown",
             [[
                 (atx_heading [
@@ -62,7 +62,7 @@ M.config = {
         fat_headlines = true,
     },
     norg = {
-        query = load_query_save(
+        query = parse_query_save(
             "norg",
             [[
                 [
@@ -92,7 +92,7 @@ M.config = {
         fat_headlines = true,
     },
     org = {
-        query = load_query_save(
+        query = parse_query_save(
             "org",
             [[
                 (headline (stars) @headline)
@@ -183,7 +183,7 @@ M.refresh = function()
             local start = range[1] or node:start()
             local end_ = range[3] or node:end_()
 
-            if capture == "headline" then
+            if capture == "headline" and c.headline_highlights then
                 local level = #vim.trim(q.get_node_text(node, bufnr))
                 local hl_group = c.headline_highlights[math.min(level, #c.headline_highlights)]
                 nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
@@ -229,7 +229,7 @@ M.refresh = function()
                 end
             end
 
-            if capture == "dash" then
+            if capture == "dash" and c.dash_highlight and c.doubledash_string then
                 nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                     virt_text = { { c.dash_string:rep(width), c.dash_highlight } },
                     virt_text_pos = "overlay",
@@ -237,7 +237,7 @@ M.refresh = function()
                 })
             end
 
-            if capture == "doubledash" then
+            if capture == "doubledash" and c.doubledash_highlight and c.doubledash_string then
                 nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                     virt_text = { { c.doubledash_string:rep(width), c.doubledash_highlight } },
                     virt_text_pos = "overlay",
@@ -245,7 +245,7 @@ M.refresh = function()
                 })
             end
 
-            if capture == "codeblock" then
+            if capture == "codeblock" and c.codeblock_highlight then
                 nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                     end_col = 0,
                     end_row = end_,

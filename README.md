@@ -161,17 +161,13 @@ require("headlines").setup {
 ```
 
 To change any setting, pass a table with that option. Or add a completely new filetype.
-You can turn off highlighting by removing that part from the query.
+You can turn off highlighting by removing that part from the query, or setting
+highlight to `false`.
 
 ```lua
 require("headlines").setup {
     markdown = {
-        query = vim.treesitter.parse_query(
-            "markdown",
-            [[
-                (fenced_code_block) @codeblock
-            ]]
-        ),
+        headline_highlights = false,
     },
     yaml = {
         query = vim.treesitter.parse_query(
