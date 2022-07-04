@@ -3,9 +3,17 @@ local M = {}
 M.namespace = vim.api.nvim_create_namespace "headlines_namespace"
 local q = require "vim.treesitter.query"
 
+local load_query_save = function(language, query)
+    local ok, parsed_query = pcall(vim.treesitter.parse_query, language, query)
+    if not ok then
+        return nil
+    end
+    return parsed_query
+end
+
 M.config = {
     markdown = {
-        query = vim.treesitter.parse_query(
+        query = load_query_save(
             "markdown",
             [[
                 (atx_heading [
@@ -29,7 +37,7 @@ M.config = {
         fat_headlines = true,
     },
     rmd = {
-        query = vim.treesitter.parse_query(
+        query = load_query_save(
             "markdown",
             [[
                 (atx_heading [
@@ -54,7 +62,7 @@ M.config = {
         fat_headlines = true,
     },
     norg = {
-        query = vim.treesitter.parse_query(
+        query = load_query_save(
             "norg",
             [[
                 [
@@ -84,7 +92,7 @@ M.config = {
         fat_headlines = true,
     },
     org = {
-        query = vim.treesitter.parse_query(
+        query = load_query_save(
             "org",
             [[
                 (headline (stars) @headline)
