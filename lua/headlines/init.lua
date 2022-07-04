@@ -53,6 +53,36 @@ M.config = {
         dash_string = "-",
         fat_headlines = true,
     },
+    norg = {
+        query = vim.treesitter.parse_query(
+            "norg",
+            [[
+                [
+                    (heading1_prefix)
+                    (heading2_prefix)
+                    (heading3_prefix)
+                    (heading4_prefix)
+                    (heading5_prefix)
+                    (heading6_prefix)
+                ] @headline
+
+                (weak_paragraph_delimiter) @dash
+                (strong_paragraph_delimiter) @doubledash
+
+                ((ranged_tag
+                    name: (tag_name) @_name
+                    (#eq? @_name "code")
+                ) @codeblock (#offset! @codeblock 0 0 1 0))
+            ]]
+        ),
+        headline_highlights = { "Headline" },
+        codeblock_highlight = "CodeBlock",
+        dash_highlight = "Dash",
+        dash_string = "-",
+        doubledash_highlight = "DoubleDash",
+        doubledash_string = "=",
+        fat_headlines = true,
+    },
     org = {
         query = vim.treesitter.parse_query(
             "org",
@@ -61,7 +91,7 @@ M.config = {
 
                 (
                     (expr) @dash
-                    (#match? @dash "^---+$")
+                    (#match? @dash "^-----+$")
                 )
 
                 (block
@@ -107,6 +137,7 @@ M.setup = function(config)
         highlight default link Headline ColorColumn
         highlight default link CodeBlock ColorColumn
         highlight default link Dash LineNr
+        highlight default link DoubleDash LineNr
     ]]
 
     vim.cmd [[
@@ -137,14 +168,16 @@ M.refresh = function()
     local left_offset = win_view.leftcol
     local width = vim.api.nvim_win_get_width(0)
 
-    for _, match, _ in c.query:iter_matches(root, bufnr) do
+    for _, match, metadata in c.query:iter_matches(root, bufnr) do
         for id, node in pairs(match) do
             local capture = c.query.captures[id]
+            local range = ((metadata[id] or {}).range or {})
+            local start = range[1] or node:start()
+            local end_ = range[3] or node:end_()
 
             if capture == "headline" then
-                local level = #q.get_node_text(node, bufnr)
+                local level = #vim.trim(q.get_node_text(node, bufnr))
                 local hl_group = c.headline_highlights[math.min(level, #c.headline_highlights)]
-                local start = node:start()
                 nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                     end_col = 0,
                     end_row = start + 1,
@@ -189,7 +222,6 @@ M.refresh = function()
             end
 
             if capture == "dash" then
-                local start = node:start()
                 nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                     virt_text = { { c.dash_string:rep(width), c.dash_highlight } },
                     virt_text_pos = "overlay",
@@ -197,9 +229,15 @@ M.refresh = function()
                 })
             end
 
+            if capture == "doubledash" then
+                nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
+                    virt_text = { { c.doubledash_string:rep(width), c.doubledash_highlight } },
+                    virt_text_pos = "overlay",
+                    hl_mode = "combine",
+                })
+            end
+
             if capture == "codeblock" then
-                local start = node:start()
-                local end_ = node:end_()
                 nvim_buf_set_extmark(bufnr, M.namespace, start, 0, {
                     end_col = 0,
                     end_row = end_,

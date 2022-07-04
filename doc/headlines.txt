@@ -2,7 +2,7 @@
 
 
 Author: Lukas Reineke <lukas.reineke@protonmail.com>
-Version: 3.0.1
+Version: 3.1.0
 
 ==============================================================================
 CONTENTS                                                           *headlines*
@@ -15,8 +15,8 @@ CONTENTS                                                           *headlines*
 ==============================================================================
  1. INTRODUCTION                                      *headlines-introduction*
 
-This plugin adds horizontal highlights for text filetypes, like `markdown` and
-`orgmode`.
+This plugin adds horizontal highlights for text filetypes, like `markdown`,
+`orgmode`, and `neorg`.
 
 1. Background highlighting for headlines
 2. Background highlighting for code blocks
@@ -27,7 +27,7 @@ Treesitter grammar needs to be installed for the languages.
 ==============================================================================
  2. HIGHLIGHTS                                          *headlines-highlights*
 
-There are 3 highlight groups that get created by default.
+There are 4 highlight groups that get created by default.
 You can overwrite them or create more yourself.
 
 ------------------------------------------------------------------------------
@@ -62,6 +62,17 @@ Dash                                                                 *hl-Dash*
     Example: >
 
         highlight link Dash LineNr
+
+------------------------------------------------------------------------------
+DoubleDash                                                     *hl-DoubleDash*
+
+    This highlight group is used for double horizontal dashes.
+
+    Default: links to |hl-LineNr|
+
+    Example: >
+
+        highlight link DoubleDash LineNr
 
 ==============================================================================
  3. SETUP                                                    *headlines-setup*
@@ -120,6 +131,36 @@ Default config: >
           dash_string = "-",
           fat_headlines = true,
       },
+      norg = {
+          query = vim.treesitter.parse_query(
+              "norg",
+              [[
+                  [
+                      (heading1_prefix)
+                      (heading2_prefix)
+                      (heading3_prefix)
+                      (heading4_prefix)
+                      (heading5_prefix)
+                      (heading6_prefix)
+                  ] @headline
+
+                  (weak_paragraph_delimiter) @dash
+                  (strong_paragraph_delimiter) @doubledash
+
+                  ((ranged_tag
+                      name: (tag_name) @_name
+                      (#eq? @_name "code")
+                  ) @codeblock (#offset! @codeblock 0 0 1 0))
+              ]]
+          ),
+          headline_highlights = { "Headline" },
+          codeblock_highlight = "CodeBlock",
+          dash_highlight = "Dash",
+          dash_string = "-",
+          doubledash_highlight = "DoubleDash",
+          doubledash_string = "=",
+          fat_headlines = true,
+      },
       org = {
           query = vim.treesitter.parse_query(
               "org",
@@ -128,7 +169,7 @@ Default config: >
 
                   (
                       (expr) @dash
-                      (#match? @dash "^---+$")
+                      (#match? @dash "^-----+$")
                   )
 
                   (block

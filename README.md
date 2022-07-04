@@ -1,6 +1,6 @@
 # Headlines.nvim
 
-This plugin adds horizontal highlights for text filetypes, like `markdown` and `orgmode`.
+This plugin adds horizontal highlights for text filetypes, like `markdown`, `orgmode`, and `neorg`.
 
 1. Background highlighting for headlines
 2. Background highlighting for code blocks
@@ -104,6 +104,36 @@ require("headlines").setup {
         dash_string = "-",
         fat_headlines = true,
     },
+    norg = {
+        query = vim.treesitter.parse_query(
+            "norg",
+            [[
+                [
+                    (heading1_prefix)
+                    (heading2_prefix)
+                    (heading3_prefix)
+                    (heading4_prefix)
+                    (heading5_prefix)
+                    (heading6_prefix)
+                ] @headline
+
+                (weak_paragraph_delimiter) @dash
+                (strong_paragraph_delimiter) @doubledash
+
+                ((ranged_tag
+                    name: (tag_name) @_name
+                    (#eq? @_name "code")
+                ) @codeblock (#offset! @codeblock 0 0 1 0))
+            ]]
+        ),
+        headline_highlights = { "Headline" },
+        codeblock_highlight = "CodeBlock",
+        dash_highlight = "Dash",
+        dash_string = "-",
+        doubledash_highlight = "DoubleDash",
+        doubledash_string = "=",
+        fat_headlines = true,
+    },
     org = {
         query = vim.treesitter.parse_query(
             "org",
@@ -112,7 +142,7 @@ require("headlines").setup {
 
                 (
                     (expr) @dash
-                    (#match? @dash "^---+$")
+                    (#match? @dash "^-----+$")
                 )
 
                 (block
