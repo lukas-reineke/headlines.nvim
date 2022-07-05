@@ -203,6 +203,7 @@ M.refresh = function()
     local win_view = vim.fn.winsaveview()
     local left_offset = win_view.leftcol
     local width = vim.api.nvim_win_get_width(0)
+    local last_fat_headline = -1
 
     for _, match, metadata in c.query:iter_matches(root, bufnr) do
         for id, node in pairs(match) do
@@ -227,14 +228,14 @@ M.refresh = function()
                     local padding_above = { { ("▃"):rep(width), reverse_hl_group } }
                     if start_row > 0 then
                         local line_above = vim.api.nvim_buf_get_lines(bufnr, start_row - 1, start_row, false)[1]
-                        if line_above == "" then
+                        if line_above == "" and start_row - 1 ~= last_fat_headline then
                             nvim_buf_set_extmark(bufnr, M.namespace, start_row - 1, 0, {
                                 virt_text = padding_above,
                                 virt_text_pos = "overlay",
                                 hl_mode = "combine",
                             })
                         else
-                            nvim_buf_set_extmark(bufnr, M.namespace, start_row - 1, 0, {
+                            nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
                                 virt_lines_above = true,
                                 virt_lines = { padding_above },
                             })
@@ -249,6 +250,7 @@ M.refresh = function()
                             virt_text_pos = "overlay",
                             hl_mode = "combine",
                         })
+                        last_fat_headline = start_row + 1
                     else
                         nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
                             virt_lines = { padding_below },
@@ -257,7 +259,7 @@ M.refresh = function()
                 end
             end
 
-            if capture == "dash" and c.dash_highlight and c.doubledash_string then
+            if capture == "dash" and c.dash_highlight and c.dash_string then
                 nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
                     virt_text = { { c.dash_string:rep(width), c.dash_highlight } },
                     virt_text_pos = "overlay",
