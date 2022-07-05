@@ -159,7 +159,8 @@ M.make_reverse_highlight = function(name)
 end
 
 M.setup = function(config)
-    M.config = vim.tbl_deep_extend("force", M.config, config or {})
+    config = config or {}
+    M.config = vim.tbl_deep_extend("force", M.config, config)
 
     -- tbl_deep_extend does not handle metatables
     for filetype, conf in pairs(config) do
