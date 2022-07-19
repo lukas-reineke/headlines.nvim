@@ -2,7 +2,7 @@
 
 
 Author: Lukas Reineke <lukas.reineke@protonmail.com>
-Version: 3.2.2
+Version: 3.3.0
 
 ==============================================================================
 CONTENTS                                                           *headlines*
@@ -122,6 +122,8 @@ Default config: >
           quote_highlight = "Quote",
           quote_string = "┃",
           fat_headlines = true,
+          fat_headline_upper_string = "▃",
+          fat_headline_lower_string = "🬂",
       },
       rmd = {
           query = vim.treesitter.parse_query(
@@ -152,6 +154,8 @@ Default config: >
           quote_highlight = "Quote",
           quote_string = "┃",
           fat_headlines = true,
+          fat_headline_upper_string = "▃",
+          fat_headline_lower_string = "🬂",
       },
       norg = {
           query = vim.treesitter.parse_query(
@@ -186,6 +190,8 @@ Default config: >
           quote_highlight = "Quote",
           quote_string = "┃",
           fat_headlines = true,
+          fat_headline_upper_string = "▃",
+          fat_headline_lower_string = "🬂",
       },
       org = {
           query = vim.treesitter.parse_query(
@@ -215,6 +221,8 @@ Default config: >
           quote_highlight = "Quote",
           quote_string = "┃",
           fat_headlines = true,
+          fat_headline_upper_string = "▃",
+          fat_headline_lower_string = "🬂",
       },
   }
 
@@ -248,6 +256,18 @@ headline_highlights                            *headlines-headline_highlights*
 fat_headlines                                        *headlines-fat_headlines*
 
     Boolean to turn on fat headlines.
+
+------------------------------------------------------------------------------
+fat_headline_upper_string                *headlines-fat_headline_upper_string*
+
+    Specifies the string that is repeated above a headline when
+    |headlines-fat_headlines| is on.
+
+------------------------------------------------------------------------------
+fat_headline_lower_string                *headlines-fat_headline_lower_string*
+
+    Specifies the string that is repeated below a headline when
+    |headlines-fat_headlines| is on.
 
 ------------------------------------------------------------------------------
 codeblock_highlight                            *headlines-codeblock_highlight*
