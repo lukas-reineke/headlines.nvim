@@ -40,6 +40,8 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
+        fat_headline_upper_string = "▃",
+        fat_headline_lower_string = "🬂",
     },
     rmd = {
         query = parse_query_save(
@@ -70,6 +72,8 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
+        fat_headline_upper_string = "▃",
+        fat_headline_lower_string = "🬂",
     },
     norg = {
         query = parse_query_save(
@@ -104,6 +108,8 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
+        fat_headline_upper_string = "▃",
+        fat_headline_lower_string = "🬂",
     },
     org = {
         query = parse_query_save(
@@ -133,6 +139,8 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
+        fat_headline_upper_string = "▃",
+        fat_headline_lower_string = "🬂",
     },
 }
 
@@ -209,9 +217,8 @@ M.refresh = function()
     for _, match, metadata in c.query:iter_matches(root, bufnr) do
         for id, node in pairs(match) do
             local capture = c.query.captures[id]
-            local start_row, start_column, end_row, _ = unpack(
-                vim.tbl_extend("force", { node:range() }, (metadata[id] or {}).range or {})
-            )
+            local start_row, start_column, end_row, _ =
+                unpack(vim.tbl_extend("force", { node:range() }, (metadata[id] or {}).range or {}))
 
             if capture == "headline" and c.headline_highlights then
                 local level = #vim.trim(q.get_node_text(node, bufnr))
@@ -226,7 +233,7 @@ M.refresh = function()
                 if c.fat_headlines then
                     local reverse_hl_group = M.make_reverse_highlight(hl_group)
 
-                    local padding_above = { { ("▃"):rep(width), reverse_hl_group } }
+                    local padding_above = { { c.fat_headline_upper_string:rep(width), reverse_hl_group } }
                     if start_row > 0 then
                         local line_above = vim.api.nvim_buf_get_lines(bufnr, start_row - 1, start_row, false)[1]
                         if line_above == "" and start_row - 1 ~= last_fat_headline then
@@ -243,7 +250,7 @@ M.refresh = function()
                         end
                     end
 
-                    local padding_below = { { ("🬂"):rep(width), reverse_hl_group } }
+                    local padding_below = { { c.fat_headline_lower_string:rep(width), reverse_hl_group } }
                     local line_below = vim.api.nvim_buf_get_lines(bufnr, start_row + 1, start_row + 2, false)[1]
                     if line_below == "" then
                         nvim_buf_set_extmark(bufnr, M.namespace, start_row + 1, 0, {
