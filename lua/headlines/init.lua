@@ -31,6 +31,8 @@ M.config = {
 
                 (block_quote_marker) @quote
                 (block_quote (paragraph (inline (block_continuation) @quote)))
+
+                [(list_marker_minus) (list_marker_star)] @list_marker
             ]]
         ),
         headline_highlights = { "Headline" },
@@ -42,6 +44,7 @@ M.config = {
         fat_headlines = true,
         fat_headline_upper_string = "▃",
         fat_headline_lower_string = "🬂",
+        list_marker_string = "•",
     },
     rmd = {
         query = parse_query_save(
@@ -187,7 +190,7 @@ M.setup = function(config)
 
     vim.cmd [[
         augroup Headlines
-        autocmd FileChangedShellPost,Syntax,TextChanged,InsertLeave,WinScrolled * lua require('headlines').refresh()
+        autocmd FileChangedShellPost,Syntax,TextChanged,TextChangedI,InsertLeave,WinScrolled * lua require('headlines').refresh()
         augroup END
     ]]
 end
@@ -270,6 +273,14 @@ M.refresh = function()
             if capture == "dash" and c.dash_highlight and c.dash_string then
                 nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
                     virt_text = { { c.dash_string:rep(width), c.dash_highlight } },
+                    virt_text_pos = "overlay",
+                    hl_mode = "combine",
+                })
+            end
+
+            if capture == "list_marker" then
+                nvim_buf_set_extmark(bufnr, M.namespace, start_row, start_column, {
+                    virt_text = { { c.list_marker_string } },
                     virt_text_pos = "overlay",
                     hl_mode = "combine",
                 })
