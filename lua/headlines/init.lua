@@ -278,7 +278,7 @@ M.refresh = function()
                 })
             end
 
-            if capture == "list_marker" then
+            if capture == "list_marker" and c.list_marker_string then
                 nvim_buf_set_extmark(bufnr, M.namespace, start_row, start_column, {
                     virt_text = { { c.list_marker_string } },
                     virt_text_pos = "overlay",
