@@ -283,8 +283,15 @@ M.refresh = function()
             end
 
             if capture == "list_marker" and c.list_marker_string then
+                local symbol
+                if type(c.list_marker_string) == "string" then
+                    symbol = c.list_marker_string
+                else
+                    local type = node:type():match "list_marker_(%w+)"
+                    symbol = c.list_marker_string[type]
+                end
                 nvim_buf_set_extmark(bufnr, M.namespace, start_row, start_column, {
-                    virt_text = { { c.list_marker_string } },
+                    virt_text = { { symbol } },
                     virt_text_pos = "overlay",
                     hl_mode = "combine",
                 })
