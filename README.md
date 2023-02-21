@@ -23,6 +23,7 @@ require("packer").startup(
     function()
         use {
             'lukas-reineke/headlines.nvim',
+            after = 'nvim-treesitter',
             config = function()
                 require('headlines').setup()
             end,
@@ -44,6 +45,21 @@ call plug#end()
 lua << EOF
 require("headlines").setup()
 EOF
+```
+
+#### Example with Lazy
+
+[folke/lazy.nvim](https://github.com/folke/lazy.nvim)
+
+```lua
+-- init.lua
+require('lazy').setup({
+    {
+        'lukas-reineke/headlines.nvim',
+        dependencies = "nvim-treesitter/nvim-treesitter",
+        config = true, -- or `opts = {}`
+    }
+})
 ```
 
 ## Setup
