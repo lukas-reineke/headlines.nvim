@@ -2,7 +2,7 @@
 
 
 Author: Lukas Reineke <lukas.reineke@protonmail.com>
-Version: 3.3.0
+Version: 3.3.1
 
 ==============================================================================
 CONTENTS                                                           *headlines*
