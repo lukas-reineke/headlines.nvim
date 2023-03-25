@@ -4,7 +4,7 @@ M.namespace = vim.api.nvim_create_namespace "headlines_namespace"
 local q = require "vim.treesitter.query"
 
 local parse_query_save = function(language, query)
-    local ok, parsed_query = pcall(vim.treesitter.parse_query, language, query)
+    local ok, parsed_query = pcall(vim.treesitter.query.parse_query, language, query)
     if not ok then
         return nil
     end
