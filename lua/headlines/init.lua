@@ -3,8 +3,12 @@ local M = {}
 M.namespace = vim.api.nvim_create_namespace "headlines_namespace"
 local q = require "vim.treesitter.query"
 
+-- vim.treesitter.query.parse_query() is deprecated, use vim.treesitter.query.parse() instead
 local parse_query_save = function(language, query)
-    local ok, parsed_query = pcall(vim.treesitter.query.parse_query, language, query)
+    local use_legacy_query = vim.fn.has "nvim-0.9.0" ~= 1
+
+    local ok, parsed_query =
+        pcall(use_legacy_query and vim.treesitter.query.parse_query or vim.treesitter.query.parse, language, query)
     if not ok then
         return nil
     end
