@@ -3,8 +3,12 @@ local M = {}
 M.namespace = vim.api.nvim_create_namespace "headlines_namespace"
 local q = require "vim.treesitter.query"
 
+local use_legacy_query = vim.fn.has "nvim-0.9.0" ~= 1
+
 local parse_query_save = function(language, query)
-    local ok, parsed_query = pcall(vim.treesitter.parse_query, language, query)
+    -- vim.treesitter.query.parse_query() is deprecated, use vim.treesitter.query.parse() instead
+    local ok, parsed_query =
+        pcall(use_legacy_query and vim.treesitter.query.parse_query or vim.treesitter.query.parse, language, query)
     if not ok then
         return nil
     end
@@ -221,7 +225,10 @@ M.refresh = function()
                 unpack(vim.tbl_extend("force", { node:range() }, (metadata[id] or {}).range or {}))
 
             if capture == "headline" and c.headline_highlights then
-                local level = #vim.trim(q.get_node_text(node, bufnr))
+                -- vim.treesitter.query.get_node_text() is deprecated, use vim.treesitter.get_node_text() instead.
+                local get_text_function = use_legacy_query and q.get_node_text(node, bufnr)
+                    or vim.treesitter.get_node_text(node, bufnr)
+                local level = #vim.trim(get_text_function)
                 local hl_group = c.headline_highlights[math.min(level, #c.headline_highlights)]
                 nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
                     end_col = 0,
