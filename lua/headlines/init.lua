@@ -303,7 +303,7 @@ M.refresh = function()
                 local codeblock_padding = math.max((padding or 0) - left_offset, 0)
 
                 if codeblock_padding > 0 then
-                    for i = start_row, end_row do
+                    for i = start_row, end_row - 1 do
                         nvim_buf_set_extmark(bufnr, M.namespace, i, 0, {
                             virt_text = { { string.rep(" ", codeblock_padding), "Normal" } },
                             virt_text_win_col = 0,
