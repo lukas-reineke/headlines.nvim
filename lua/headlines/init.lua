@@ -221,7 +221,7 @@ M.refresh = function()
     for _, match, metadata in c.query:iter_matches(root, bufnr) do
         for id, node in pairs(match) do
             local capture = c.query.captures[id]
-            local start_row, start_column, end_row, _ =
+            local start_row, start_column, end_row, end_column =
                 unpack(vim.tbl_extend("force", { node:range() }, (metadata[id] or {}).range or {}))
 
             if capture == "headline" and c.headline_highlights then
@@ -314,8 +314,12 @@ M.refresh = function()
             end
 
             if capture == "quote" and c.quote_highlight and c.quote_string then
+                -- assumption: whitespaces are just spaces; strdisplaywidth of all characters and quote_string is 1
+                local len = end_column - start_column
+                local line = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row + 1, false)[1]
+                local margin = #(line:sub(1, end_column + 1 - 1):match('%s*$'))
                 nvim_buf_set_extmark(bufnr, M.namespace, start_row, start_column, {
-                    virt_text = { { c.quote_string, c.quote_highlight } },
+                    virt_text = { { string.rep(" ", len - 1 - margin) ..  c.quote_string .. string.rep(" ", margin), c.quote_highlight } },
                     virt_text_pos = "overlay",
                     hl_mode = "combine",
                 })
