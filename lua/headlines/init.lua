@@ -35,6 +35,8 @@ M.config = {
 
                 (block_quote_marker) @quote
                 (block_quote (paragraph (inline (block_continuation) @quote)))
+                (block_quote (paragraph (block_continuation) @quote))
+                (block_quote (block_continuation) @quote)
             ]]
         ),
         headline_highlights = { "Headline" },
@@ -66,6 +68,8 @@ M.config = {
 
                 (block_quote_marker) @quote
                 (block_quote (paragraph (inline (block_continuation) @quote)))
+                (block_quote (paragraph (block_continuation) @quote))
+                (block_quote (block_continuation) @quote)
             ]]
         ),
         treesitter_language = "markdown",
@@ -225,7 +229,7 @@ M.refresh = function()
     for _, match, metadata in c.query:iter_matches(root, bufnr) do
         for id, node in pairs(match) do
             local capture = c.query.captures[id]
-            local start_row, start_column, end_row, _ =
+            local start_row, start_column, end_row, end_column =
                 unpack(vim.tbl_extend("force", { node:range() }, (metadata[id] or {}).range or {}))
 
             if capture == "headline" and c.headline_highlights then
@@ -307,7 +311,7 @@ M.refresh = function()
                 local codeblock_padding = math.max((padding or 0) - left_offset, 0)
 
                 if codeblock_padding > 0 then
-                    for i = start_row, end_row do
+                    for i = start_row, end_row - 1 do
                         nvim_buf_set_extmark(bufnr, M.namespace, i, 0, {
                             virt_text = { { string.rep(" ", codeblock_padding), "Normal" } },
                             virt_text_win_col = 0,
@@ -318,11 +322,20 @@ M.refresh = function()
             end
 
             if capture == "quote" and c.quote_highlight and c.quote_string then
-                nvim_buf_set_extmark(bufnr, M.namespace, start_row, start_column, {
-                    virt_text = { { c.quote_string, c.quote_highlight } },
-                    virt_text_pos = "overlay",
-                    hl_mode = "combine",
-                })
+                if vim.bo.filetype == "markdown" then
+                    local text = vim.api.nvim_buf_get_text(bufnr, start_row, start_column, end_row, end_column, {})[1]
+                    nvim_buf_set_extmark(bufnr, M.namespace, start_row, start_column, {
+                        virt_text = { { text:gsub(">", c.quote_string), c.quote_highlight } },
+                        virt_text_pos = "overlay",
+                        hl_mode = "combine",
+                    })
+                else
+                    nvim_buf_set_extmark(bufnr, M.namespace, start_row, start_column, {
+                        virt_text = { { c.quote_string, c.quote_highlight } },
+                        virt_text_pos = "overlay",
+                        hl_mode = "combine",
+                    })
+                end
             end
         end
     end
