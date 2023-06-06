@@ -19,17 +19,15 @@ Use your favourite plugin manager to install.
 
 ```lua
 -- init.lua
-require("packer").startup(
-    function()
-        use {
-            'lukas-reineke/headlines.nvim',
-            after = 'nvim-treesitter',
-            config = function()
-                require('headlines').setup()
-            end,
-        }
-    end
-)
+require("packer").startup(function()
+    use {
+        "lukas-reineke/headlines.nvim",
+        after = "nvim-treesitter",
+        config = function()
+            require("headlines").setup()
+        end,
+    }
+end)
 ```
 
 #### Example with Plug
@@ -53,13 +51,13 @@ EOF
 
 ```lua
 -- init.lua
-require('lazy').setup({
+require("lazy").setup {
     {
-        'lukas-reineke/headlines.nvim',
+        "lukas-reineke/headlines.nvim",
         dependencies = "nvim-treesitter/nvim-treesitter",
         config = true, -- or `opts = {}`
-    }
-})
+    },
+}
 ```
 
 ## Setup
@@ -91,6 +89,8 @@ require("headlines").setup {
 
                 (block_quote_marker) @quote
                 (block_quote (paragraph (inline (block_continuation) @quote)))
+                (block_quote (paragraph (block_continuation) @quote))
+                (block_quote (block_continuation) @quote)
             ]]
         ),
         headline_highlights = { "Headline" },
@@ -122,6 +122,8 @@ require("headlines").setup {
 
                 (block_quote_marker) @quote
                 (block_quote (paragraph (inline (block_continuation) @quote)))
+                (block_quote (paragraph (block_continuation) @quote))
+                (block_quote (block_continuation) @quote)
             ]]
         ),
         treesitter_language = "markdown",
@@ -229,7 +231,7 @@ require("headlines").setup {
             ]]
         ),
         dash_highlight = "Dash",
-    }
+    },
 }
 ```
 
