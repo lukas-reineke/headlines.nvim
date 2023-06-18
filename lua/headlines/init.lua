@@ -46,6 +46,7 @@ M.config = {
         fat_headlines = true,
         fat_headline_upper_string = "▃",
         fat_headline_lower_string = "🬂",
+        whole_line = true,
     },
     rmd = {
         query = parse_query_save(
@@ -78,6 +79,7 @@ M.config = {
         fat_headlines = true,
         fat_headline_upper_string = "▃",
         fat_headline_lower_string = "🬂",
+        whole_line = true,
     },
     norg = {
         query = parse_query_save(
@@ -114,6 +116,7 @@ M.config = {
         fat_headlines = true,
         fat_headline_upper_string = "▃",
         fat_headline_lower_string = "🬂",
+        whole_line = true,
     },
     org = {
         query = parse_query_save(
@@ -145,6 +148,7 @@ M.config = {
         fat_headlines = true,
         fat_headline_upper_string = "▃",
         fat_headline_lower_string = "🬂",
+        whole_line = true,
     },
 }
 
@@ -229,13 +233,23 @@ M.refresh = function()
                 local get_text_function = use_legacy_query and q.get_node_text(node, bufnr)
                     or vim.treesitter.get_node_text(node, bufnr)
                 local level = #vim.trim(get_text_function)
-                local hl_group = c.headline_highlights[math.min(level, #c.headline_highlights)]
-                nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
-                    end_col = 0,
-                    end_row = start_row + 1,
-                    hl_group = hl_group,
-                    hl_eol = true,
-                })
+                level = math.min(level, #c.headline_highlights)
+                local hl_group = c.headline_highlights[level]
+                if c.whole_line and ! c.fat_headlines then
+                    nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
+                        end_col = 0,
+                        end_row = start_row + 1,
+                        hl_group = hl_group,
+                        hl_eol = true,
+                    })
+                else
+                    nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
+                        end_col = level,
+                        end_row = start_row + 0,
+                        hl_group = hl_group,
+                        hl_eol = true,
+                    })
+                end
 
                 if c.fat_headlines then
                     local reverse_hl_group = M.make_reverse_highlight(hl_group)
