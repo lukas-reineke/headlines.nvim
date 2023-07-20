@@ -95,7 +95,7 @@ M.config = {
                 (weak_paragraph_delimiter) @dash
                 (strong_paragraph_delimiter) @doubledash
 
-                ((ranged_tag
+                ((ranged_verbatim_tag
                     name: (tag_name) @_name
                     (#eq? @_name "code")
                 ) @codeblock (#offset! @codeblock 0 0 1 0))
