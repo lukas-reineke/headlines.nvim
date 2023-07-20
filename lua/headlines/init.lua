@@ -95,10 +95,14 @@ M.config = {
                 (weak_paragraph_delimiter) @dash
                 (strong_paragraph_delimiter) @doubledash
 
-                ((ranged_verbatim_tag
+                ([(ranged_tag
                     name: (tag_name) @_name
                     (#eq? @_name "code")
-                ) @codeblock (#offset! @codeblock 0 0 1 0))
+                )
+                (ranged_verbatim_tag
+                    name: (tag_name) @_name
+                    (#eq? @_name "code")
+                )] @codeblock (#offset! @codeblock 0 0 1 0))
 
                 (quote1_prefix) @quote
             ]]
