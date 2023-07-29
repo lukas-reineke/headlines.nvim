@@ -91,6 +91,12 @@ require("headlines").setup {
 
                 (block_quote_marker) @quote
                 (block_quote (paragraph (inline (block_continuation) @quote)))
+
+                [
+                  (list_marker_minus)
+                  (list_marker_star)
+                  (list_marker_plus)
+                ] @list_marker
             ]]
         ),
         headline_highlights = { "Headline" },
@@ -102,6 +108,7 @@ require("headlines").setup {
         fat_headlines = true,
         fat_headline_upper_string = "▃",
         fat_headline_lower_string = "🬂",
+        list_marker_string = "•",
     },
     rmd = {
         query = vim.treesitter.parse_query(
@@ -122,6 +129,12 @@ require("headlines").setup {
 
                 (block_quote_marker) @quote
                 (block_quote (paragraph (inline (block_continuation) @quote)))
+
+                [
+                  (list_marker_minus)
+                  (list_marker_star)
+                  (list_marker_plus)
+                ] @list_marker
             ]]
         ),
         treesitter_language = "markdown",
@@ -134,6 +147,7 @@ require("headlines").setup {
         fat_headlines = true,
         fat_headline_upper_string = "▃",
         fat_headline_lower_string = "🬂",
+        list_marker_string = "•",
     },
     norg = {
         query = vim.treesitter.parse_query(
