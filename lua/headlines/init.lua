@@ -40,6 +40,15 @@ M.config = {
             ]]
         ),
         headline_highlights = { "Headline" },
+        bullet_highlights = {
+            "@text.title.1.marker.markdown",
+            "@text.title.2.marker.markdown",
+            "@text.title.3.marker.markdown",
+            "@text.title.4.marker.markdown",
+            "@text.title.5.marker.markdown",
+            "@text.title.6.marker.markdown",
+        },
+        bullets = { "◉", "○", "✸", "✿" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
@@ -74,6 +83,15 @@ M.config = {
         ),
         treesitter_language = "markdown",
         headline_highlights = { "Headline" },
+        bullet_highlights = {
+            "@text.title.1.marker.markdown",
+            "@text.title.2.marker.markdown",
+            "@text.title.3.marker.markdown",
+            "@text.title.4.marker.markdown",
+            "@text.title.5.marker.markdown",
+            "@text.title.6.marker.markdown",
+        },
+        bullets = { "◉", "○", "✸", "✿" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
@@ -112,6 +130,15 @@ M.config = {
             ]]
         ),
         headline_highlights = { "Headline" },
+        bullet_highlights = {
+            "@neorg.headings.1.prefix",
+            "@neorg.headings.2.prefix",
+            "@neorg.headings.3.prefix",
+            "@neorg.headings.4.prefix",
+            "@neorg.headings.5.prefix",
+            "@neorg.headings.6.prefix",
+        },
+        bullets = { "◉", "○", "✸", "✿" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
@@ -145,6 +172,17 @@ M.config = {
             ]]
         ),
         headline_highlights = { "Headline" },
+        bullet_highlights = {
+            "OrgTSHeadlineLevel1",
+            "OrgTSHeadlineLevel2",
+            "OrgTSHeadlineLevel3",
+            "OrgTSHeadlineLevel4",
+            "OrgTSHeadlineLevel5",
+            "OrgTSHeadlineLevel6",
+            "OrgTSHeadlineLevel7",
+            "OrgTSHeadlineLevel8",
+        },
+        bullets = { "◉", "○", "✸", "✿" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
@@ -238,10 +276,20 @@ M.refresh = function()
                     or vim.treesitter.get_node_text(node, bufnr)
                 local level = #vim.trim(get_text_function)
                 local hl_group = c.headline_highlights[math.min(level, #c.headline_highlights)]
+                local bullet_hl_group = c.bullet_highlights[math.min(level, #c.bullet_highlights)]
+
+                local virt_text = {}
+                if c.bullets and #c.bullets > 0 then
+                    local bullet = c.bullets[((level - 1) % #c.bullets) + 1]
+                    virt_text[1] = { string.rep(" ", level - 1) .. bullet, { hl_group, bullet_hl_group } }
+                end
+
                 nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
                     end_col = 0,
                     end_row = start_row + 1,
                     hl_group = hl_group,
+                    virt_text = virt_text,
+                    virt_text_pos = "overlay",
                     hl_eol = true,
                 })
 

@@ -94,6 +94,15 @@ require("headlines").setup {
             ]]
         ),
         headline_highlights = { "Headline" },
+        bullet_highlights = {
+            "@text.title.1.marker.markdown",
+            "@text.title.2.marker.markdown",
+            "@text.title.3.marker.markdown",
+            "@text.title.4.marker.markdown",
+            "@text.title.5.marker.markdown",
+            "@text.title.6.marker.markdown",
+        },
+        bullets = { "◉", "○", "✸", "✿" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
@@ -128,6 +137,15 @@ require("headlines").setup {
         ),
         treesitter_language = "markdown",
         headline_highlights = { "Headline" },
+        bullet_highlights = {
+            "@text.title.1.marker.markdown",
+            "@text.title.2.marker.markdown",
+            "@text.title.3.marker.markdown",
+            "@text.title.4.marker.markdown",
+            "@text.title.5.marker.markdown",
+            "@text.title.6.marker.markdown",
+        },
+        bullets = { "◉", "○", "✸", "✿" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
@@ -166,6 +184,15 @@ require("headlines").setup {
             ]]
         ),
         headline_highlights = { "Headline" },
+        bullet_highlights = {
+            "@neorg.headings.1.prefix",
+            "@neorg.headings.2.prefix",
+            "@neorg.headings.3.prefix",
+            "@neorg.headings.4.prefix",
+            "@neorg.headings.5.prefix",
+            "@neorg.headings.6.prefix",
+        },
+        bullets = { "◉", "○", "✸", "✿" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
@@ -190,7 +217,7 @@ require("headlines").setup {
 
                 (block
                     name: (expr) @_name
-                    (#eq? @_name "SRC")
+                    (#match? @_name "(SRC|src)")
                 ) @codeblock
 
                 (paragraph . (expr) @quote
@@ -199,6 +226,17 @@ require("headlines").setup {
             ]]
         ),
         headline_highlights = { "Headline" },
+        bullet_highlights = {
+            "OrgTSHeadlineLevel1",
+            "OrgTSHeadlineLevel2",
+            "OrgTSHeadlineLevel3",
+            "OrgTSHeadlineLevel4",
+            "OrgTSHeadlineLevel5",
+            "OrgTSHeadlineLevel6",
+            "OrgTSHeadlineLevel7",
+            "OrgTSHeadlineLevel8",
+        },
+        bullets = { "◉", "○", "✸", "✿" },
         codeblock_highlight = "CodeBlock",
         dash_highlight = "Dash",
         dash_string = "-",
