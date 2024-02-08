@@ -113,9 +113,20 @@ Default config: >
 
                   (block_quote_marker) @quote
                   (block_quote (paragraph (inline (block_continuation) @quote)))
+                  (block_quote (paragraph (block_continuation) @quote))
+                  (block_quote (block_continuation) @quote)
               ]]
           ),
           headline_highlights = { "Headline" },
+          bullet_highlights = {
+              "@text.title.1.marker.markdown",
+              "@text.title.2.marker.markdown",
+              "@text.title.3.marker.markdown",
+              "@text.title.4.marker.markdown",
+              "@text.title.5.marker.markdown",
+              "@text.title.6.marker.markdown",
+          },
+          bullets = { "◉", "○", "✸", "✿" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
           dash_string = "-",
@@ -144,10 +155,21 @@ Default config: >
 
                   (block_quote_marker) @quote
                   (block_quote (paragraph (inline (block_continuation) @quote)))
+                  (block_quote (paragraph (block_continuation) @quote))
+                  (block_quote (block_continuation) @quote)
               ]]
           ),
           treesitter_language = "markdown",
           headline_highlights = { "Headline" },
+          bullet_highlights = {
+              "@text.title.1.marker.markdown",
+              "@text.title.2.marker.markdown",
+              "@text.title.3.marker.markdown",
+              "@text.title.4.marker.markdown",
+              "@text.title.5.marker.markdown",
+              "@text.title.6.marker.markdown",
+          },
+          bullets = { "◉", "○", "✸", "✿" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
           dash_string = "-",
@@ -173,15 +195,28 @@ Default config: >
                   (weak_paragraph_delimiter) @dash
                   (strong_paragraph_delimiter) @doubledash
 
-                  ((ranged_tag
+                  ([(ranged_tag
                       name: (tag_name) @_name
                       (#eq? @_name "code")
-                  ) @codeblock (#offset! @codeblock 0 0 1 0))
-
+                  )
+                  (ranged_verbatim_tag
+                      name: (tag_name) @_name
+                      (#eq? @_name "code")
+                  )] @codeblock (#offset! @codeblock 0 0 1 0))
+  
                   (quote1_prefix) @quote
               ]]
           ),
           headline_highlights = { "Headline" },
+          bullet_highlights = {
+              "@neorg.headings.1.prefix",
+              "@neorg.headings.2.prefix",
+              "@neorg.headings.3.prefix",
+              "@neorg.headings.4.prefix",
+              "@neorg.headings.5.prefix",
+              "@neorg.headings.6.prefix",
+          },
+          bullets = { "◉", "○", "✸", "✿" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
           dash_string = "-",
@@ -206,7 +241,7 @@ Default config: >
 
                   (block
                       name: (expr) @_name
-                      (#eq? @_name "SRC")
+                      (#match? @_name "(SRC|src)")
                   ) @codeblock
 
                   (paragraph . (expr) @quote
@@ -215,6 +250,17 @@ Default config: >
               ]]
           ),
           headline_highlights = { "Headline" },
+          bullet_highlights = {
+              "OrgTSHeadlineLevel1",
+              "OrgTSHeadlineLevel2",
+              "OrgTSHeadlineLevel3",
+              "OrgTSHeadlineLevel4",
+              "OrgTSHeadlineLevel5",
+              "OrgTSHeadlineLevel6",
+              "OrgTSHeadlineLevel7",
+              "OrgTSHeadlineLevel8",
+          },
+          bullets = { "◉", "○", "✸", "✿" },
           codeblock_highlight = "CodeBlock",
           dash_highlight = "Dash",
           dash_string = "-",
@@ -250,6 +296,20 @@ treesitter_language                            *headlines-treesitter_language*
 headline_highlights                            *headlines-headline_highlights*
 
     A list of |highlight| groups that are used to highlight the headline.
+    The level of the headline is used as the index of the list.
+
+------------------------------------------------------------------------------
+bullet_highlights                                *headlines-bullet_highlights*
+
+    A list of |highlight| groups that are used to highlight the headline
+    prefix/bullet.
+    The level of the headline is used as the index of the list.
+
+------------------------------------------------------------------------------
+bullets                                                    *headlines-bullets*
+
+    A list of strings that are displayed as the headline prefix/bullet.
+    Set it to an empty table to disable.
     The level of the headline is used as the index of the list.
 
 ------------------------------------------------------------------------------
@@ -311,7 +371,7 @@ quote_string                                            *headlines-quote_string*
 The MIT Licence
 http://www.opensource.org/licenses/mit-license.php
 
-Copyright (c) 2022 Lukas Reineke
+Copyright (c) 2024 Lukas Reineke
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
