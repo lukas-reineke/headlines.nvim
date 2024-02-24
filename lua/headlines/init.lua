@@ -303,6 +303,7 @@ M.refresh = function()
                             nvim_buf_set_extmark(bufnr, M.namespace, start_row - 1, 0, {
                                 virt_text = padding_above,
                                 virt_text_pos = "overlay",
+                                virt_text_win_col = 0,
                                 hl_mode = "combine",
                             })
                         else
@@ -319,6 +320,7 @@ M.refresh = function()
                         nvim_buf_set_extmark(bufnr, M.namespace, start_row + 1, 0, {
                             virt_text = padding_below,
                             virt_text_pos = "overlay",
+                            virt_text_win_col = 0,
                             hl_mode = "combine",
                         })
                         last_fat_headline = start_row + 1
