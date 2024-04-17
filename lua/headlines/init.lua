@@ -293,7 +293,10 @@ M.refresh = function()
                     hl_eol = true,
                 })
 
-                if c.fat_headlines then
+                local use_fat_headlines = (type(c.fat_headlines) == "boolean") and c.fat_headlines or
+                                          ((type(c.fat_headlines) == "function") and c.fat_headlines() or false)
+
+                if use_fat_headlines then
                     local reverse_hl_group = M.make_reverse_highlight(hl_group)
 
                     local padding_above = { { c.fat_headline_upper_string:rep(width), reverse_hl_group } }
