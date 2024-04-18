@@ -268,3 +268,5 @@ end
 function Headline:refresh()
     vim.print('Headline refresh')
 end
+
+return Headline
