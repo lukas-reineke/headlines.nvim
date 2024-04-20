@@ -21,7 +21,7 @@ function Config.defaults()
     return {
         markdown = {
             query = utils.parse_query_save(
-            "markdown",
+            'markdown',
             [[
             (atx_heading [
             (atx_h1_marker)
@@ -42,28 +42,28 @@ function Config.defaults()
             (block_quote (block_continuation) @quote)
             ]]
             ),
-            headline_highlights = { "Headline" },
+            headline_highlights = { 'Headline' },
             bullet_highlights = {
-                "@text.title.1.marker.markdown",
-                "@text.title.2.marker.markdown",
-                "@text.title.3.marker.markdown",
-                "@text.title.4.marker.markdown",
-                "@text.title.5.marker.markdown",
-                "@text.title.6.marker.markdown",
+                '@text.title.1.marker.markdown',
+                '@text.title.2.marker.markdown',
+                '@text.title.3.marker.markdown',
+                '@text.title.4.marker.markdown',
+                '@text.title.5.marker.markdown',
+                '@text.title.6.marker.markdown',
             },
-            bullets = { "◉", "○", "✸", "✿" },
-            codeblock_highlight = "CodeBlock",
-            dash_highlight = "Dash",
-            dash_string = "-",
-            quote_highlight = "Quote",
-            quote_string = "┃",
+            bullets = { '◉', '○', '✸', '✿' },
+            codeblock_highlight = 'CodeBlock',
+            dash_highlight = 'Dash',
+            dash_string = '-',
+            quote_highlight = 'Quote',
+            quote_string = '┃',
             fat_headlines = true,
-            fat_headline_upper_string = "▃",
-            fat_headline_lower_string = "🬂",
+            fat_headline_upper_string = '▃',
+            fat_headline_lower_string = '🬂',
         },
         rmd = {
             query = utils.parse_query_save(
-            "markdown",
+            'markdown',
             [[
             (atx_heading [
             (atx_h1_marker)
@@ -84,29 +84,29 @@ function Config.defaults()
             (block_quote (block_continuation) @quote)
             ]]
             ),
-            treesitter_language = "markdown",
-            headline_highlights = { "Headline" },
+            treesitter_language = 'markdown',
+            headline_highlights = { 'Headline' },
             bullet_highlights = {
-                "@text.title.1.marker.markdown",
-                "@text.title.2.marker.markdown",
-                "@text.title.3.marker.markdown",
-                "@text.title.4.marker.markdown",
-                "@text.title.5.marker.markdown",
-                "@text.title.6.marker.markdown",
+                '@text.title.1.marker.markdown',
+                '@text.title.2.marker.markdown',
+                '@text.title.3.marker.markdown',
+                '@text.title.4.marker.markdown',
+                '@text.title.5.marker.markdown',
+                '@text.title.6.marker.markdown',
             },
-            bullets = { "◉", "○", "✸", "✿" },
-            codeblock_highlight = "CodeBlock",
-            dash_highlight = "Dash",
-            dash_string = "-",
-            quote_highlight = "Quote",
-            quote_string = "┃",
+            bullets = { '◉', '○', '✸', '✿' },
+            codeblock_highlight = 'CodeBlock',
+            dash_highlight = 'Dash',
+            dash_string = '-',
+            quote_highlight = 'Quote',
+            quote_string = '┃',
             fat_headlines = true,
-            fat_headline_upper_string = "▃",
-            fat_headline_lower_string = "🬂",
+            fat_headline_upper_string = '▃',
+            fat_headline_lower_string = '🬂',
         },
         norg = {
             query = utils.parse_query_save(
-            "norg",
+            'norg',
             [[
             [
             (heading1_prefix)
@@ -122,78 +122,78 @@ function Config.defaults()
 
             ([(ranged_tag
             name: (tag_name) @_name
-            (#eq? @_name "code")
+            (#eq? @_name 'code')
             )
             (ranged_verbatim_tag
             name: (tag_name) @_name
-            (#eq? @_name "code")
+            (#eq? @_name 'code')
             )] @codeblock (#offset! @codeblock 0 0 1 0))
 
             (quote1_prefix) @quote
             ]]
             ),
-            headline_highlights = { "Headline" },
+            headline_highlights = { 'Headline' },
             bullet_highlights = {
-                "@neorg.headings.1.prefix",
-                "@neorg.headings.2.prefix",
-                "@neorg.headings.3.prefix",
-                "@neorg.headings.4.prefix",
-                "@neorg.headings.5.prefix",
-                "@neorg.headings.6.prefix",
+                '@neorg.headings.1.prefix',
+                '@neorg.headings.2.prefix',
+                '@neorg.headings.3.prefix',
+                '@neorg.headings.4.prefix',
+                '@neorg.headings.5.prefix',
+                '@neorg.headings.6.prefix',
             },
-            bullets = { "◉", "○", "✸", "✿" },
-            codeblock_highlight = "CodeBlock",
-            dash_highlight = "Dash",
-            dash_string = "-",
-            doubledash_highlight = "DoubleDash",
-            doubledash_string = "=",
-            quote_highlight = "Quote",
-            quote_string = "┃",
+            bullets = { '◉', '○', '✸', '✿' },
+            codeblock_highlight = 'CodeBlock',
+            dash_highlight = 'Dash',
+            dash_string = '-',
+            doubledash_highlight = 'DoubleDash',
+            doubledash_string = '=',
+            quote_highlight = 'Quote',
+            quote_string = '┃',
             fat_headlines = true,
-            fat_headline_upper_string = "▃",
-            fat_headline_lower_string = "🬂",
+            fat_headline_upper_string = '▃',
+            fat_headline_lower_string = '🬂',
         },
         org = {
             query = utils.parse_query_save(
-            "org",
+            'org',
             [[
             (headline (stars) @headline)
 
             (
             (expr) @dash
-            (#match? @dash "^-----+$")
+            (#match? @dash '^-----+$')
             )
 
             (block
             name: (expr) @_name
-            (#match? @_name "(SRC|src)")
+            (#match? @_name '(SRC|src)')
             ) @codeblock
 
             (paragraph . (expr) @quote
-            (#eq? @quote ">")
+            (#eq? @quote '>')
             )
             ]]
             ),
-            headline_highlights = { "Headline" },
+            headline_highlights = { 'Headline' },
             bullet_highlights = {
-                "@org.headline.level1",
-                "@org.headline.level2",
-                "@org.headline.level3",
-                "@org.headline.level4",
-                "@org.headline.level5",
-                "@org.headline.level6",
-                "@org.headline.level7",
-                "@org.headline.level8",
+                '@org.headline.level1',
+                '@org.headline.level2',
+                '@org.headline.level3',
+                '@org.headline.level4',
+                '@org.headline.level5',
+                '@org.headline.level6',
+                '@org.headline.level7',
+                '@org.headline.level8',
             },
-            bullets = { "◉", "○", "✸", "✿" },
-            codeblock_highlight = "CodeBlock",
-            dash_highlight = "Dash",
-            dash_string = "-",
-            quote_highlight = "Quote",
-            quote_string = "┃",
+            bullets = { '◉', '○', '✸', '✿' },
+            codeblock_highlight = 'CodeBlock',
+            dash_highlight = 'Dash',
+            dash_string = '-',
+            quote_highlight = 'Quote',
+            quote_string = '┃',
             fat_headlines = true,
-            fat_headline_upper_string = "▃",
-            fat_headline_lower_string = "🬂",
+            fat_headline_upper_string = '▃',
+            fat_headline_lower_string = '🬂',
         },
     }
 end
