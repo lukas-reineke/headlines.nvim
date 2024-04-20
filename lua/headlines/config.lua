@@ -30,15 +30,24 @@ function Config.generic_defaults()
     return {}
 end
 
+---Get filetype specific headline config defaults.
+---If one is not found, then it returns a generic config
+---@param filetype string
+---@return HeadlineConfig
 function Config.filetype_defaults(filetype)
     local defaults = Config.defaults()
     return defaults[filetype] or Config.generic_defaults()
 end
 
+---Merge user config with default config.
+---Uses user config when applicable, otherwise uses default config
+---@param user_config HeadlineConfig
+---@param default_config HeadlineConfig
+---@return HeadlineConfig
 function Config.merge(user_config, default_config)
     local merged = {}
 
-    merged = user_config and vim.tbl_deep_extend('force', default_config or {}, user_config) or (default_config or {})
+    merged = user_config and vim.tbl_deep_extend('force', default_config, user_config) or default_config
 
     -- tbl_deep_extend does not handle metatables
     if user_config.query then

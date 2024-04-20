@@ -2,6 +2,7 @@ local Headline = {}
 Headline.__index = Headline
 
 local renderer = require('headlines.renderer')
+local config_manager = require('headlines.config')
 
 ---@class Headline
 ---@field config HeadlineConfig
@@ -10,7 +11,7 @@ local renderer = require('headlines.renderer')
 ---@field autocmds table<number>
 
 ---Create a new Headline
----@param config? table
+---@param config? HeadlineConfig
 ---@return Headline
 function Headline.new(config)
     return setmetatable({
@@ -49,6 +50,9 @@ function Headline:attach(buffer)
             self:delete()
         end,
     })
+
+    local filetype = vim.api.nvim_buf_get_option(buffer, 'filetype')
+    self.config = config_manager.merge(self.config, config_manager.filetype_defaults(filetype))
     self.namespace = vim.api.nvim_create_namespace('headline_namespace_' .. buffer)
     self.buffer = buffer
     self.autocmds = {
@@ -65,7 +69,7 @@ function Headline:delete()
 end
 
 function Headline:refresh()
-    --renderer.render(self)
+    renderer.render(self)
 end
 
 return Headline
