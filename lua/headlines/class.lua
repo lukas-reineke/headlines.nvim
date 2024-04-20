@@ -1,18 +1,7 @@
 local Headline = {}
 Headline.__index = Headline
 
----@class HeadlineConfig
----@field query? Query
----@field headline_highlights? table<string>
----@field bullet_highlights? table<string>
----@field bullets? table<string>
----@field codeblock_highlight? string
----@field dash_highlight? string
----@field quote_highlight? string
----@field quote_string? string
----@field fat_headlines? boolean
----@field fat_headline_upper_string? string
----@field fat_headline_lower_string? string
+local renderer = require('headlines.renderer')
 
 ---@class Headline
 ---@field config HeadlineConfig
@@ -60,7 +49,7 @@ function Headline:attach(buffer)
             self:delete()
         end,
     })
-    self.namespace = 'headline_namespace_' .. buffer
+    self.namespace = vim.api.nvim_create_namespace('headline_namespace_' .. buffer)
     self.buffer = buffer
     self.autocmds = {
         refresh = refresh_autocmd,
@@ -76,7 +65,7 @@ function Headline:delete()
 end
 
 function Headline:refresh()
-    vim.print('Headline refresh: ' .. self.buffer)
+    --renderer.render(self)
 end
 
 return Headline
