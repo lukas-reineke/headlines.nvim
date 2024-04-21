@@ -315,8 +315,7 @@ bullets                                                    *headlines-bullets*
 ------------------------------------------------------------------------------
 fat_headlines                                        *headlines-fat_headlines*
 
-    Specifies whether or not to use fat headlines.
-    Can be a boolean or a function returning a boolean.
+    Boolean to turn on fat headlines.
 
 ------------------------------------------------------------------------------
 fat_headline_upper_string                *headlines-fat_headline_upper_string*
