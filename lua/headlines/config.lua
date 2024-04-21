@@ -9,11 +9,15 @@ local utils = require('headlines.utils')
 ---@field bullets? table<string>
 ---@field codeblock_highlight? string
 ---@field dash_highlight? string
+---@field dash_string? string
+---@field doubledash_highlight? string
+---@field doubledash_string? string
 ---@field quote_highlight? string
 ---@field quote_string? string
 ---@field fat_headlines? boolean
 ---@field fat_headline_upper_string? string
 ---@field fat_headline_lower_string? string
+---@field treesitter_language? string
 
 ---Get headline config defaults
 ---@return table<string, HeadlineConfig>
@@ -21,26 +25,26 @@ function Config.defaults()
     return {
         markdown = {
             query = utils.parse_query_save(
-            'markdown',
-            [[
-            (atx_heading [
-            (atx_h1_marker)
-            (atx_h2_marker)
-            (atx_h3_marker)
-            (atx_h4_marker)
-            (atx_h5_marker)
-            (atx_h6_marker)
-            ] @headline)
+                'markdown',
+                [[
+                    (atx_heading [
+                    (atx_h1_marker)
+                    (atx_h2_marker)
+                    (atx_h3_marker)
+                    (atx_h4_marker)
+                    (atx_h5_marker)
+                    (atx_h6_marker)
+                ] @headline)
 
-            (thematic_break) @dash
+                (thematic_break) @dash
 
-            (fenced_code_block) @codeblock
+                (fenced_code_block) @codeblock
 
-            (block_quote_marker) @quote
-            (block_quote (paragraph (inline (block_continuation) @quote)))
-            (block_quote (paragraph (block_continuation) @quote))
-            (block_quote (block_continuation) @quote)
-            ]]
+                (block_quote_marker) @quote
+                (block_quote (paragraph (inline (block_continuation) @quote)))
+                (block_quote (paragraph (block_continuation) @quote))
+                (block_quote (block_continuation) @quote)
+                ]]
             ),
             headline_highlights = { 'Headline' },
             bullet_highlights = {
@@ -63,26 +67,26 @@ function Config.defaults()
         },
         rmd = {
             query = utils.parse_query_save(
-            'markdown',
-            [[
-            (atx_heading [
-            (atx_h1_marker)
-            (atx_h2_marker)
-            (atx_h3_marker)
-            (atx_h4_marker)
-            (atx_h5_marker)
-            (atx_h6_marker)
-            ] @headline)
+                'markdown',
+                [[
+                    (atx_heading [
+                    (atx_h1_marker)
+                    (atx_h2_marker)
+                    (atx_h3_marker)
+                    (atx_h4_marker)
+                    (atx_h5_marker)
+                    (atx_h6_marker)
+                ] @headline)
 
-            (thematic_break) @dash
+                (thematic_break) @dash
 
-            (fenced_code_block) @codeblock
+                (fenced_code_block) @codeblock
 
-            (block_quote_marker) @quote
-            (block_quote (paragraph (inline (block_continuation) @quote)))
-            (block_quote (paragraph (block_continuation) @quote))
-            (block_quote (block_continuation) @quote)
-            ]]
+                (block_quote_marker) @quote
+                (block_quote (paragraph (inline (block_continuation) @quote)))
+                (block_quote (paragraph (block_continuation) @quote))
+                (block_quote (block_continuation) @quote)
+                ]]
             ),
             treesitter_language = 'markdown',
             headline_highlights = { 'Headline' },
@@ -106,31 +110,31 @@ function Config.defaults()
         },
         norg = {
             query = utils.parse_query_save(
-            'norg',
-            [[
-            [
-            (heading1_prefix)
-            (heading2_prefix)
-            (heading3_prefix)
-            (heading4_prefix)
-            (heading5_prefix)
-            (heading6_prefix)
-            ] @headline
+                'norg',
+                [[
+                    [
+                        (heading1_prefix)
+                        (heading2_prefix)
+                        (heading3_prefix)
+                        (heading4_prefix)
+                        (heading5_prefix)
+                        (heading6_prefix)
+                    ] @headline
 
-            (weak_paragraph_delimiter) @dash
-            (strong_paragraph_delimiter) @doubledash
+                    (weak_paragraph_delimiter) @dash
+                    (strong_paragraph_delimiter) @doubledash
 
-            ([(ranged_tag
-            name: (tag_name) @_name
-            (#eq? @_name 'code')
-            )
-            (ranged_verbatim_tag
-            name: (tag_name) @_name
-            (#eq? @_name 'code')
-            )] @codeblock (#offset! @codeblock 0 0 1 0))
+                    ([(ranged_tag
+                        name: (tag_name) @_name
+                        (#eq? @_name "code")
+                    )
+                    (ranged_verbatim_tag
+                        name: (tag_name) @_name
+                        (#eq? @_name "code")
+                    )] @codeblock (#offset! @codeblock 0 0 1 0))
 
-            (quote1_prefix) @quote
-            ]]
+                    (quote1_prefix) @quote
+                ]]
             ),
             headline_highlights = { 'Headline' },
             bullet_highlights = {
@@ -152,27 +156,28 @@ function Config.defaults()
             fat_headlines = true,
             fat_headline_upper_string = '▃',
             fat_headline_lower_string = '🬂',
+            treesitter_language = 'norg',
         },
         org = {
             query = utils.parse_query_save(
-            'org',
-            [[
-            (headline (stars) @headline)
+                'org',
+                [[
+                    (headline (stars) @headline)
 
-            (
-            (expr) @dash
-            (#match? @dash '^-----+$')
-            )
+                    (
+                        (expr) @dash
+                        (#match? @dash "^-----+$")
+                    )
 
-            (block
-            name: (expr) @_name
-            (#match? @_name '(SRC|src)')
-            ) @codeblock
+                    (block
+                        name: (expr) @_name
+                        (#match? @_name "(SRC|src)")
+                    ) @codeblock
 
-            (paragraph . (expr) @quote
-            (#eq? @quote '>')
-            )
-            ]]
+                    (paragraph . (expr) @quote
+                        (#eq? @quote ">")
+                    )
+                ]]
             ),
             headline_highlights = { 'Headline' },
             bullet_highlights = {

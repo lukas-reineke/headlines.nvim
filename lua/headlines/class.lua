@@ -60,6 +60,8 @@ function Headline:attach(buffer)
         delete = delete_autocmd
     }
 
+    self:refresh()
+
     return self
 end
 
