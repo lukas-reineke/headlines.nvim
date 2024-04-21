@@ -7,7 +7,7 @@ local config_manager = require('headlines.config')
 ---@class Headline
 ---@field config HeadlineConfig
 ---@field namespace number
----@field buffer number
+---@field buffer buffer
 ---@field autocmds table<number>
 
 ---Create a new Headline
@@ -23,7 +23,7 @@ function Headline.new(config)
 end
 
 ---Attach headline to buffer
----@param buffer number
+---@param buffer buffer
 ---@return Headline
 function Headline:attach(buffer)
     local refresh_autocmd = vim.api.nvim_create_autocmd({
