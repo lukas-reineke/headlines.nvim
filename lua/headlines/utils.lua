@@ -25,4 +25,29 @@ function Utils.set_extmark(buffer, ns_id, line, col, opts)
     pcall(vim.api.nvim_buf_set_extmark, buffer, ns_id, line, col, opts)
 end
 
+---Create a new highlight with reverse highlights
+---@param name string
+---@return string
+function Utils.make_reverse_highlight(name)
+    local reverse_name = name .. "Reverse"
+
+    if vim.fn.synIDattr(reverse_name, "fg") ~= "" then
+        return reverse_name
+    end
+
+    local highlight = vim.fn.synIDtrans(vim.fn.hlID(name))
+    local gui_bg = vim.fn.synIDattr(highlight, "bg", "gui")
+    local cterm_bg = vim.fn.synIDattr(highlight, "bg", "cterm")
+
+    if gui_bg == "" then
+        gui_bg = "None"
+    end
+    if cterm_bg == "" then
+        cterm_bg = "None"
+    end
+
+    vim.cmd(string.format("highlight %s guifg=%s ctermfg=%s", reverse_name, gui_bg or "None", cterm_bg or "None"))
+    return reverse_name
+end
+
 return Utils

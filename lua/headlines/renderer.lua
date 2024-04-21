@@ -31,7 +31,7 @@ function Renderer.render(headline)
 
             if capture == 'headline' and conf.headline_highlights then
                 local get_text_function = utils.use_legacy_query and treesitter_query.get_node_text(node, headline.buffer)
-                                          or vim.treesitter.get_node_text(node, headline.buffer)
+                or vim.treesitter.get_node_text(node, headline.buffer)
 
                 local level = #vim.trim(get_text_function)
                 local hl_group = conf.headline_highlights[math.min(level, #conf.headline_highlights)]
@@ -51,7 +51,46 @@ function Renderer.render(headline)
                     virt_text_pos = 'overlay',
                     hl_eol = true
                 })
+
+                if conf.fat_headlines then
+                    local reverse_hl_group = utils.make_reverse_highlight(hl_group)
+
+                    local padding_above = { { conf.fat_headline_upper_string:rep(width), reverse_hl_group } }
+                    if start_row > 0 then
+                        local line_above = vim.api.nvim_buf_get_lines(headline.buffer, start_row - 1, start_row, false)[1]
+                        if line_above == "" and start_row - 1 ~= last_fat_headline then
+                            utils.set_extmark(headline.buffer, headline.namespace, start_row - 1, 0, {
+                                virt_text = padding_above,
+                                virt_text_pos = "overlay",
+                                virt_text_win_col = 0,
+                                hl_mode = "combine",
+                            })
+                        else
+                            utils.set_extmark(headline.buffer, headline.namespace, start_row, 0, {
+                                virt_lines_above = true,
+                                virt_lines = { padding_above },
+                            })
+                        end
+                    end
+
+                    local padding_below = { { conf.fat_headline_lower_string:rep(width), reverse_hl_group } }
+                    local line_below = vim.api.nvim_buf_get_lines(headline.buffer, start_row + 1, start_row + 2, false)[1]
+                    if line_below == "" then
+                        utils.set_extmark(headline.buffer, headline.namespace, start_row + 1, 0, {
+                            virt_text = padding_below,
+                            virt_text_pos = "overlay",
+                            virt_text_win_col = 0,
+                            hl_mode = "combine",
+                        })
+                        last_fat_headline = start_row + 1
+                    else
+                        utils.set_extmark(headline.buffer, headline.namespace, start_row, 0, {
+                            virt_lines = { padding_below },
+                        })
+                    end
+                end
             end
+
 
             if capture == 'dash' and conf.dash_highlight and conf.dash_string then
                 utils.set_extmark(headline.buffer, headline.namespace, start_row, 0, {
