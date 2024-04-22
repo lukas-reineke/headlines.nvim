@@ -224,9 +224,7 @@ end
 ---@param default_config HeadlineConfig
 ---@return HeadlineConfig
 function Config.merge(user_config, default_config)
-    local merged = {}
-
-    merged = user_config and vim.tbl_deep_extend('force', default_config, user_config) or default_config
+    local merged = user_config and vim.tbl_deep_extend('force', default_config, user_config) or default_config
 
     -- tbl_deep_extend does not handle metatables
     if user_config.query then
