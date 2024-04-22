@@ -9,6 +9,9 @@ local config_manager = require('headlines.config')
 ---@field namespace number
 ---@field buffer buffer
 ---@field autocmds table<number>
+---@field attach fun(self: Headline, buffer: buffer): Headline
+---@field delete fun(self: Headline)
+---@field refresh fun(self: Headline)
 
 ---Create a new Headline
 ---@param config? HeadlineConfig
