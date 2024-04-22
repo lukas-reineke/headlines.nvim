@@ -7,7 +7,6 @@ local treesitter_query = require('vim.treesitter.query')
 ---@param headline Headline
 function Renderer.render(headline)
     local conf = headline.config
-    vim.print(conf.headline_highlights)
     vim.api.nvim_buf_clear_namespace(headline.buffer, headline.namespace, 0, -1)
 
     if not conf or not conf.query then
