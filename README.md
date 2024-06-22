@@ -22,7 +22,6 @@ Use your favourite plugin manager to install.
 require("packer").startup(function()
     use {
         "lukas-reineke/headlines.nvim",
-        after = "nvim-treesitter",
         config = function()
             require("headlines").setup()
         end,
@@ -54,7 +53,6 @@ EOF
 require("lazy").setup {
     {
         "lukas-reineke/headlines.nvim",
-        dependencies = "nvim-treesitter/nvim-treesitter",
         config = true, -- or `opts = {}`
     },
 }
