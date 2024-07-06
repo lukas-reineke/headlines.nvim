@@ -56,8 +56,8 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
+        fat_headline_upper_string = "▄",
+        fat_headline_lower_string = "▀",
     },
     rmd = {
         query = parse_query_save(
@@ -99,8 +99,8 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
+        fat_headline_upper_string = "▄",
+        fat_headline_lower_string = "▀",
     },
     norg = {
         query = parse_query_save(
@@ -148,8 +148,8 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
+        fat_headline_upper_string = "▄",
+        fat_headline_lower_string = "▀",
     },
     org = {
         query = parse_query_save(
@@ -190,8 +190,8 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
+        fat_headline_upper_string = "▄",
+        fat_headline_lower_string = "▀",
     },
 }
 
