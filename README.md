@@ -110,7 +110,7 @@ require("headlines").setup {
         quote_string = "┃",
         fat_headlines = true,
         fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
+        fat_headline_lower_string = "▀",
     },
     rmd = {
         query = vim.treesitter.parse_query(
@@ -153,7 +153,7 @@ require("headlines").setup {
         quote_string = "┃",
         fat_headlines = true,
         fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
+        fat_headline_lower_string = "▀",
     },
     norg = {
         query = vim.treesitter.parse_query(
@@ -202,7 +202,7 @@ require("headlines").setup {
         quote_string = "┃",
         fat_headlines = true,
         fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
+        fat_headline_lower_string = "▀",
     },
     org = {
         query = vim.treesitter.parse_query(
@@ -244,7 +244,7 @@ require("headlines").setup {
         quote_string = "┃",
         fat_headlines = true,
         fat_headline_upper_string = "▃",
-        fat_headline_lower_string = "🬂",
+        fat_headline_lower_string = "▀",
     },
 }
 ```
