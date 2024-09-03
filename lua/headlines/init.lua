@@ -4,6 +4,7 @@ M.namespace = vim.api.nvim_create_namespace "headlines_namespace"
 local q = require "vim.treesitter.query"
 
 local use_legacy_query = vim.fn.has "nvim-0.9.0" ~= 1
+local has_quantified_captures = vim.fn.has "nvim-0.11.0" == 1
 
 local parse_query_save = function(language, query)
     -- vim.treesitter.query.parse_query() is deprecated, use vim.treesitter.query.parse() instead
@@ -266,6 +267,10 @@ M.refresh = function()
 
     for _, match, metadata in c.query:iter_matches(root, bufnr) do
         for id, node in pairs(match) do
+            if has_quantified_captures then
+                node = node[#node]
+            end
+
             local capture = c.query.captures[id]
             local start_row, start_column, end_row, end_column =
                 unpack(vim.tbl_extend("force", { node:range() }, (metadata[id] or {}).range or {}))
