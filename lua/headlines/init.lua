@@ -286,7 +286,8 @@ M.refresh = function()
                 local virt_text = {}
                 if c.bullets and #c.bullets > 0 then
                     local bullet = c.bullets[((level - 1) % #c.bullets) + 1]
-                    virt_text[1] = { string.rep(" ", level - vim.fn.strwidth(bullet)) .. bullet, { hl_group, bullet_hl_group } }
+                    virt_text[1] =
+                        { string.rep(" ", level - vim.fn.strwidth(bullet)) .. bullet, { hl_group, bullet_hl_group } }
                 end
 
                 nvim_buf_set_extmark(bufnr, M.namespace, start_row, 0, {
