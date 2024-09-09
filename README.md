@@ -9,9 +9,14 @@ This plugin adds highlights for text filetypes, like `markdown`, `orgmode`, and 
 
 Treesitter grammar needs to be installed for the languages.
 
+> [!NOTE]
+> Consider using [MeanderingProgrammer/render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) instead.
+> It does everything headlines.nvim does and more.
+> I will continue to maintain headlines.nvim, but I am unlikely to add more features here.
+
 ## Install
 
-Use your favourite plugin manager to install.
+Use your favorite plugin manager to install.
 
 #### Example with Packer
 
