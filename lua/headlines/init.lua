@@ -55,7 +55,7 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
+        fat_headline_upper_string = "▄",
         fat_headline_lower_string = "▀",
     },
     rmd = {
@@ -98,7 +98,7 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
+        fat_headline_upper_string = "▄",
         fat_headline_lower_string = "▀",
     },
     norg = {
@@ -147,7 +147,7 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
+        fat_headline_upper_string = "▄",
         fat_headline_lower_string = "▀",
     },
     org = {
@@ -189,7 +189,7 @@ M.config = {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
+        fat_headline_upper_string = "▄",
         fat_headline_lower_string = "▀",
     },
 }

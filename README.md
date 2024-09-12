@@ -109,7 +109,7 @@ require("headlines").setup {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
+        fat_headline_upper_string = "▄",
         fat_headline_lower_string = "▀",
     },
     rmd = {
@@ -152,7 +152,7 @@ require("headlines").setup {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
+        fat_headline_upper_string = "▄",
         fat_headline_lower_string = "▀",
     },
     norg = {
@@ -201,7 +201,7 @@ require("headlines").setup {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
+        fat_headline_upper_string = "▄",
         fat_headline_lower_string = "▀",
     },
     org = {
@@ -243,7 +243,7 @@ require("headlines").setup {
         quote_highlight = "Quote",
         quote_string = "┃",
         fat_headlines = true,
-        fat_headline_upper_string = "▃",
+        fat_headline_upper_string = "▄",
         fat_headline_lower_string = "▀",
     },
 }
