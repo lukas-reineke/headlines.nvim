@@ -95,7 +95,7 @@ Default config: >
 
   require("headlines").setup {
       markdown = {
-          query = vim.treesitter.parse_query(
+          query = vim.treesitter.query.parse(
               "markdown",
               [[
                   (atx_heading [
@@ -137,7 +137,7 @@ Default config: >
           fat_headline_lower_string = "▀",
       },
       rmd = {
-          query = vim.treesitter.parse_query(
+          query = vim.treesitter.query.parse(
               "markdown",
               [[
                   (atx_heading [
@@ -180,7 +180,7 @@ Default config: >
           fat_headline_lower_string = "▀",
       },
       norg = {
-          query = vim.treesitter.parse_query(
+          query = vim.treesitter.query.parse(
               "norg",
               [[
                   [
@@ -203,7 +203,7 @@ Default config: >
                       name: (tag_name) @_name
                       (#eq? @_name "code")
                   )] @codeblock (#offset! @codeblock 0 0 1 0))
-  
+
                   (quote1_prefix) @quote
               ]]
           ),
@@ -229,7 +229,7 @@ Default config: >
           fat_headline_lower_string = "▀",
       },
       org = {
-          query = vim.treesitter.parse_query(
+          query = vim.treesitter.query.parse(
               "org",
               [[
                   (headline (stars) @headline)

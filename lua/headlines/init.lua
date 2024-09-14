@@ -7,7 +7,7 @@ local use_legacy_query = vim.fn.has "nvim-0.9.0" ~= 1
 local has_quantified_captures = vim.fn.has "nvim-0.11.0" == 1
 
 local parse_query_save = function(language, query)
-    -- vim.treesitter.query.parse_query() is deprecated, use vim.treesitter.query.parse() instead
+    -- vim.treesitter.parse_query() is deprecated, use vim.treesitter.query.parse() instead
     local ok, parsed_query =
         pcall(use_legacy_query and vim.treesitter.query.parse_query or vim.treesitter.query.parse, language, query)
     if not ok then

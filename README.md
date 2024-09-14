@@ -76,7 +76,7 @@ Default config:
 ```lua
 require("headlines").setup {
     markdown = {
-        query = vim.treesitter.parse_query(
+        query = vim.treesitter.query.parse(
             "markdown",
             [[
                 (atx_heading [
@@ -118,7 +118,7 @@ require("headlines").setup {
         fat_headline_lower_string = "▀",
     },
     rmd = {
-        query = vim.treesitter.parse_query(
+        query = vim.treesitter.query.parse(
             "markdown",
             [[
                 (atx_heading [
@@ -161,7 +161,7 @@ require("headlines").setup {
         fat_headline_lower_string = "▀",
     },
     norg = {
-        query = vim.treesitter.parse_query(
+        query = vim.treesitter.query.parse(
             "norg",
             [[
                 [
@@ -210,7 +210,7 @@ require("headlines").setup {
         fat_headline_lower_string = "▀",
     },
     org = {
-        query = vim.treesitter.parse_query(
+        query = vim.treesitter.query.parse(
             "org",
             [[
                 (headline (stars) @headline)
@@ -264,7 +264,7 @@ require("headlines").setup {
         headline_highlights = false,
     },
     yaml = {
-        query = vim.treesitter.parse_query(
+        query = vim.treesitter.query.parse(
             "yaml",
             [[
                 (
